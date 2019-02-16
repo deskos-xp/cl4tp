@@ -1,0 +1,18 @@
+{
+	"encrypt":{
+		"mode":"encrypt",
+		"dataChunkSize":10485760,
+		"ifile":"",
+		"ofile":"",
+		"key_list":"",
+		"public_key":""
+	},
+	"decrypt":{
+		"mode":"decrypt",
+		"ifile":"",
+		"ofile":"",
+		"key_list":"",
+		"private_key":"",
+		"password":""
+	}
+}

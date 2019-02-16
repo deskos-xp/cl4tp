@@ -1,0 +1,10 @@
+<todos>
+	<done>
+		add reset button to both encrypt_widget and decrypt_widget
+		connect controls 
+		connect progress bars
+	</done>
+	<list>
+		add a check to disable encrypt/dcrypt file if required fields are blank
+	</list>
+</todos>
