@@ -30,7 +30,7 @@ class Ui_ewk_gui(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 754, 483))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 98, 28))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout_6 = QtWidgets.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_6.setObjectName("gridLayout_6")
@@ -85,7 +85,7 @@ class Ui_ewk_gui(object):
 
     def retranslateUi(self, ewk_gui):
         _translate = QtCore.QCoreApplication.translate
-        ewk_gui.setWindowTitle(_translate("ewk_gui", "MainWindow"))
+        ewk_gui.setWindowTitle(_translate("ewk_gui", "EncryptWithKey"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.encrypt), _translate("ewk_gui", "Encrypt"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.decrypt), _translate("ewk_gui", "Decrypt"))
         self.menuFile.setTitle(_translate("ewk_gui", "&File"))

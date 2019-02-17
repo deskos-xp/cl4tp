@@ -8,6 +8,8 @@ class controls:
     def __init__(me,self):
         me.valueChanged(self)
         me.buttons(self)
+        self.timed_actions(self.ew)
+
     reset_called=False
     def encrypt_file(me,self,tab):
         print(tab['settings'])
@@ -15,7 +17,9 @@ class controls:
         if ld['key_list'] == '':
             ld['key_list']=None
         ecr=ewk.druugianNightmare()
-        tab['obj'].progressBar.reset()
+        tab['obj'].progressBar.setValue(0)
+        tab['obj'].progressBar.setFormat('%p%')
+        self.tabDisable(self.ew,False)
         ecr.encryptFile(
                 ifile=ld['ifile'],
                 ofile=ld['ofile'],
@@ -25,6 +29,7 @@ class controls:
                 progress_callback=self.progress_crypt,
                 tab=tab
                 )
+        self.tabDisable(self.ew,True)
 
     def saveSetting(me,self,key,val,setField=False):
         self.ew['settings'][key]=val
@@ -60,6 +65,7 @@ class controls:
         me.clear_settings(self)
         me.clear_fields(self)
         self.ew['obj'].progressBar.setValue(0)
+        self.ew['obj'].progressBar.setFormat('%p%')
 
     def clear_fields(me,self):
         local=self.ew['obj']

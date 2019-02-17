@@ -14,7 +14,7 @@ import encryptWithKey
 import libControl
 import encrypt_widget,decrypt_widget
 import lib_ew_controls,lib_dw_controls
-
+import engineering_notation as en
 class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
     field_defaults='./defaults/default.json'
     config={
@@ -48,6 +48,33 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         if not os.path.exists(self.config['default-ofile-dir']):
             os.mkdir(self.config['default-ofile-dir'])
 
+    def actors(self,tab):
+        children=tab['dialog'].findChildren(QtWidgets.QLineEdit)
+        count=0
+        for child in children:
+            if child.objectName() not in ['password','qt_spinbox_lineedit']:
+                if child.text() in ['',None]:
+                    count+=1
+        if count > 0:
+            self.setState(False,tab)
+        else:
+            self.setState(True,tab)
+
+    def setState(self,state,tab):
+        if tab['running'] == False:
+            if tab['settings']['mode'] == 'encrypt':
+                tab['obj'].encrypt_file.setEnabled(state)
+            if tab['settings']['mode'] == 'decrypt':
+                tab['obj'].decrypt_file.setEnabled(state)
+
+
+    def timed_actions(self,tab):
+        tab['timer']={}
+        tab['timer']['0']=QtCore.QTimer(self)
+        tab['timer']['0'].timeout.connect(lambda: self.actors(tab))
+        tab['timer']['0'].start(10)
+
+
     def fmanager(self,mode,tab):
         if mode == 'ifile':
             if tab['settings']['mode'] == 'encrypt':
@@ -58,18 +85,16 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         if mode == 'ofile':
             if tab['settings']['mode'] == 'encrypt':
                 key='encrypt-filter-ofile'
+                fd=os.path.basename(tab['settings']['ifile'])+self.ext
             if tab['settings']['mode'] == 'decrypt':
                 key='decrypt-filter-ofile'
+                fd=os.path.basename(os.path.splitext(tab['settings']['ifile'])[0])
 
             file=QtWidgets.QFileDialog.getSaveFileName(
                     caption=mode,
                     directory=os.path.join(
                         self.config['default-ofile-dir'],
-                        os.path.basename(
-                            os.path.splitext(
-                                tab['settings']['ifile']
-                                )[0]
-                            )
+                        fd
                         ),
                     filter=self.config[key]
                     )
@@ -104,8 +129,20 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             return file[0]
     
     def progress_crypt(self,tab,chunks,size):
+        tab['obj'].progressBar.setFormat('{}/{} - %p%'.format(en.EngNumber(chunks,2),en.EngNumber(size,2)))
         tab['obj'].progressBar.setValue(int((chunks/size)*100))
         QtWidgets.QApplication.processEvents()
+
+    def tabDisable(self,tab,state):
+        tab['running']=state
+        if tab['settings']['mode'] == 'decrypt':
+            self.encrypt.setEnabled(state)
+        elif tab['settings']['mode'] == 'encrypt':
+            self.decrypt.setEnabled(state)
+
+        for i in tab['dialog'].findChildren((QtWidgets.QWidget)):
+            if i.objectName() != 'progressBar':
+                i.setEnabled(state)
 
     def missingKeyUpdate(self,ud_field=False,tab=None):
         if tab['settings']['mode'] == 'encrypt':
@@ -144,6 +181,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                 'key_list':"",
                 'dataChunkSize':10485760
                 }
+        self.ew['running']=False
         self.ew['controls']=lib_ew_controls.controls(self)
         self.encrypt_layout.addWidget(self.ew['dialog'])
 
@@ -161,6 +199,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                 'password':"",
                 'key_list':"",
                 }
+        self.dw['running']=False
         self.dw['controls']=lib_dw_controls.controls(self)
         self.decrypt_layout.addWidget(self.dw['dialog'])
 
@@ -168,7 +207,8 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         #setup controls
         self.ctrl=libControl.controls()
         self.ctrl.init(self)
-        
+       
+        #self.tabDisable(self.ew,False)
 
         
 if __name__ == "__main__":

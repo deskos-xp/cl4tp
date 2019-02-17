@@ -7,6 +7,7 @@ class controls:
     def __init__(me,self):
         me.valueChanged(self)
         me.buttons(self)
+        self.timed_actions(self.dw)
 
     def decrypt_file(me,self,tab):
         print(tab['settings'])
@@ -17,7 +18,9 @@ class controls:
             ld['password']=None
 
         ecr=ewk.druugianNightmare()
-        tab['obj'].progressBar.reset()
+        tab['obj'].progressBar.setValue(0)
+        tab['obj'].progressBar.setFormat('%p%')
+        self.tabDisable(self.dw,False)
         ecr.decryptFile(
                 ifile=ld['ifile'],
                 ofile=ld['ofile'],
@@ -27,6 +30,7 @@ class controls:
                 progress_callback=self.progress_crypt,
                 tab=tab
                 )
+        self.tabDisable(self.dw,True)
 
     def buttons(me,self):
         self.dw['obj'].decrypt_file.clicked.connect(lambda: self.dw['controls'].decrypt_file(self))
@@ -60,6 +64,7 @@ class controls:
         me.clear_settings(self)
         me.clear_fields(self)
         self.dw['obj'].progressBar.setValue(0)
+        self.dw['obj'].progressBar.setFormat('%p%')
 
     def clear_fields(me,self):
         local=self.dw['obj']
