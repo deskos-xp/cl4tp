@@ -108,7 +108,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-private-key'])
         if mode == 'key_list':
             if tab['settings']['mode'] == 'decrypt':
-                file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=os.environ['HOME'],filter=self.config['filter-key-list'])
+                file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['default-ofile-dir'],filter=self.config['filter-key-list'])
             elif tab['settings']['mode'] == 'encrypt':
                 file=QtWidgets.QFileDialog.getSaveFileName(
                         caption=mode,
@@ -128,10 +128,13 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         else:
             return file[0]
     
-    def progress_crypt(self,tab,chunks,size):
-        tab['obj'].progressBar.setFormat('{}/{} - %p%'.format(en.EngNumber(chunks,2),en.EngNumber(size,2)))
-        tab['obj'].progressBar.setValue(int((chunks/size)*100))
-        QtWidgets.QApplication.processEvents()
+    def progress_crypt(self,tab,chunks=None,size=None):
+        if chunks != None and size != None:
+            tab['obj'].progressBar.setFormat('{}/{} - %p%'.format(en.EngNumber(chunks,2),en.EngNumber(size,2)))
+            tab['obj'].progressBar.setValue(int((chunks/size)*100))
+            QtWidgets.QApplication.processEvents()
+        else:
+            return tab['obj'].progressBar,self.statusBar
 
     def tabDisable(self,tab,state):
         tab['running']=state
@@ -208,8 +211,17 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.ctrl=libControl.controls()
         self.ctrl.init(self)
        
-        #self.tabDisable(self.ew,False)
-
+        #set default tab from config
+        #if tab not in config, use hardcoded
+        failTab=0
+        for index in range(self.tabWidget.count()):
+            if self.config['default-start-tab'] == self.tabWidget.tabText(index).lower():
+                self.tabWidget.setCurrentIndex(index)
+            else:
+                failTab+=1
+        if failTab == self.tabWidget.count():
+            print('invalid default-start-tab value in config')
+        
         
 if __name__ == "__main__":
     a=QtWidgets.QApplication(sys.argv)
