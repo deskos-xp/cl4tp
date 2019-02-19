@@ -213,7 +213,7 @@ class druugianNightmare:
                             )
                             )
                         p[0].setValue(int((counter/size)*100))
-                        hsh.update(data)
+                    hsh.update(data)
             hashes[key]={}
             hashes[key]['digest']=hsh.hexdigest()
             hashes[key]['file']=files[key]

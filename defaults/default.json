@@ -13,6 +13,7 @@
 		"ofile":"",
 		"key_list":"",
 		"private_key":"",
-		"password":""
+		"password":"",
+		"hash_log":""
 	}
 }

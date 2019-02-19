@@ -27,6 +27,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             'filter-public-key':'Key File (*.key);;Public Key (*.pub);;All Files(*)',
             'filter-private-key':'Key File (*.key);;Private Key (*.priv);;All Files(*)',
             'filter-key-list':'Encrypted Json Key List (*.ejk);;All Files(*)',
+            'filter-hash-log':'Hash Log (*.hash);;All Files (*)',
             }
     config_file='./defaults/config.json'
     ext='.ebin'
@@ -52,8 +53,14 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         children=tab['dialog'].findChildren(QtWidgets.QLineEdit)
         count=0
         for child in children:
+            skipNext=False
             if child.objectName() not in ['password','qt_spinbox_lineedit']:
-                if child.text() in ['',None]:
+                #print(tab['settings']['mode'],count)
+                if child.objectName() == 'hash_log':
+                    if tab['obj'].checkHashes.isChecked() == True:
+                        if child.text() in ['',None]:
+                            count+=1
+                elif child.text() in ['',None]:
                     count+=1
         if count > 0:
             self.setState(False,tab)
@@ -76,6 +83,30 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
 
 
     def fmanager(self,mode,tab):
+        if mode == 'hash_log':
+            key='filter-hash-log'
+            fd=''
+            if tab['settings']['ofile'] != '':
+                fd=tab['settings']['ofile']+'.hsh'
+
+            if tab['settings']['mode'] == 'encrypt':
+                file=QtWidgets.QFileDialog.getSaveFileName(
+                        caption=mode,
+                        directory=os.path.join(
+                            self.config['default-ofile-dir'],
+                            os.path.basename(fd)
+                            ),
+                        filter=self.config[key]
+                        )
+            if tab['settings']['mode'] == 'decrypt':
+                file=QtWidgets.QFileDialog.getOpenFileName(
+                        caption=mode,
+                        directory=os.path.join(
+                            self.config['default-ofile-dir'],
+                            os.path.basename(fd)
+                            ),
+                        filter=self.config[key]
+                        )
         if mode == 'ifile':
             if tab['settings']['mode'] == 'encrypt':
                 key='encrypt-filter-ifile'
