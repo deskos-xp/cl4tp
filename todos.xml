@@ -2,5 +2,8 @@
 	<list>
 		add icon
 		add functionaliy to encrypt tab to save specific hash log name
+		add utility to create new rsa-key
+		add utility to edit settings
+		add utility to edit application defaults
 	</list>
 </todos>

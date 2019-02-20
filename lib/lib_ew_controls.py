@@ -51,6 +51,7 @@ class controls:
                 self.missingKeyUpdate(ud_field=True,tab=self.ew)
                 local=self.ew['dialog']
                 if val != '':
+                    val=os.path.join(self.config['default-ofile-dir'],os.path.basename(val))
                     ofile=val+'.ebin'
                     key_list=val+'.ejk'
                     #hash_log=val+'.hash'
