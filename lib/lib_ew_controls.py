@@ -12,24 +12,32 @@ class controls:
 
     reset_called=False
     def encrypt_file(me,self,tab):
-        print(tab['settings'])
-        ld=tab['settings']
-        if ld['key_list'] == '':
-            ld['key_list']=None
-        ecr=ewk.druugianNightmare()
-        tab['obj'].progressBar.setValue(0)
-        tab['obj'].progressBar.setFormat('%p%')
+        tab['running']=True
+        self.statusBar().showMessage('')
         self.tabDisable(self.ew,False)
-        ecr.encryptFile(
-                ifile=ld['ifile'],
-                ofile=ld['ofile'],
-                masterKeyPub=ld['public_key'],
-                key_list=ld['key_list'],
-                chunksize=ld['dataChunkSize'],
-                progress_callback=self.progress_crypt,
-                tab=tab
-                )
-        self.tabDisable(self.ew,True)
+        ready=self.preCheck(tab)
+        if ready == True:
+            #print(tab['settings'])
+            ld=tab['settings']
+            if ld['key_list'] == '':
+                ld['key_list']=None
+            ecr=ewk.druugianNightmare()
+            tab['obj'].progressBar.setValue(0)
+            tab['obj'].progressBar.setFormat('%p%')
+            ecr.encryptFile(
+                    ifile=ld['ifile'],
+                    ofile=ld['ofile'],
+                    masterKeyPub=ld['public_key'],
+                    key_list=ld['key_list'],
+                    chunksize=ld['dataChunkSize'],
+                    progress_callback=self.progress_crypt,
+                    tab=tab
+                    )
+            self.tabDisable(self.ew,True)
+        else:
+            self.tabDisable(self.ew,True)
+            self.statusBar().showMessage('Bad Fields: Check your paths!')
+        tab['running']=False
 
     def saveSetting(me,self,key,val,setField=False):
         self.ew['settings'][key]=val
@@ -41,6 +49,17 @@ class controls:
         if key == 'ifile':
             if me.reset_called == False:
                 self.missingKeyUpdate(ud_field=True,tab=self.ew)
+                local=self.ew['dialog']
+                if val != '':
+                    ofile=val+'.ebin'
+                    key_list=val+'.ejk'
+                    #hash_log=val+'.hash'
+                else:
+                    ofile=''
+                    key_list=''
+                for k,v in [['ofile',ofile],['key_list',key_list]]:
+                    field=local.findChildren(QtWidgets.QLineEdit,k,QtCore.Qt.FindChildrenRecursively)
+                    field[0].setText(v)
             else:
                 me.reset_called=False
 

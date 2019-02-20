@@ -1,6 +1,6 @@
 <todos>
 	<list>
-		add functionality to decrypt tab to read hash log and warn user if hashes do not match the files to be decrypted
+		add icon
 		add functionaliy to encrypt tab to save specific hash log name
 	</list>
 </todos>

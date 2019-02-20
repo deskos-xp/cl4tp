@@ -13,46 +13,76 @@ class controls:
         self.timed_actions(self.dw)
 
     def decrypt_file(me,self,tab):
+        tab['running']=True
         #print(tab['settings'])
-        ld=tab['settings']
-        if ld['key_list'] == '':
-            ld['key_list']=None
-        if ld['password'] == '':
-            ld['password']=None
-
-        if tab['obj'].checkHashes.isChecked() == True:
-            hsh=me.gen_hashes(
-                    ifile=ld['ifile'],
-                    key_list=ld['key_list'],
-                    tab=tab,
-                    progress_callback=self.progress_crypt,
-                    chunksize=100000
-                    )
-            hashlog={}
-            with open(ld['hash_log'],'r') as log:
-                hashlog=json.load(log)
-            keys=['key_list','efile']
-            for i in keys:
-                print('generated:',hsh[i]['file'],hsh[i]['digest'])
-                print('read-from-log:',hashlog[i]['file'],hashlog[i]['digest'])
-
-        ecr=ewk.druugianNightmare()
-        tab['obj'].progressBar.setValue(0)
-        tab['obj'].progressBar.setFormat('%p%')
+        self.statusBar().showMessage('')
         self.tabDisable(self.dw,False)
-        ecr.decryptFile(
-                ifile=ld['ifile'],
-                ofile=ld['ofile'],
-                masterKeyPriv=ld['private_key'],
-                key_list=ld['key_list'],
-                password_to_masterKey=ld['password'],
-                progress_callback=self.progress_crypt,
-                tab=tab
-                )
-        self.tabDisable(self.dw,True)
-        tab['obj'].progressBar.setValue(0)
-        tab['obj'].progressBar.setFormat('%p%')
+        ready=self.preCheck(tab)
+        if ready == True:
+            skip=False
+            ld=tab['settings']
+            if ld['key_list'] == '':
+                ld['key_list']=None
+            if ld['password'] == '':
+                ld['password']=None
 
+            if tab['obj'].checkHashes.isChecked() == True:
+                hsh=me.gen_hashes(
+                        ifile=ld['ifile'],
+                        key_list=ld['key_list'],
+                        tab=tab,
+                        progress_callback=self.progress_crypt,
+                        chunksize=100000
+                        )
+                hashlog={}
+                with open(ld['hash_log'],'r') as log:
+                    hashlog=json.load(log)
+                keys=['key_list','efile']
+                err=False
+                msg=''
+            
+                for i in keys:
+                    if hsh[i]['file'] != hashlog[i]['file']:
+                        msg='the hash log file name content does not match the generated hash sum: {} | '.format(hsh[i]['file'],hashlog[i]['file'])
+                        err=True
+                    if hsh[i]['digest'] != hashlog[i]['digest']:
+                        msg="the hash sum in the log does not match the hash sum of the current file: {}".format(hsh[i]['file'])
+                        err=True
+                    print('generated:',hsh[i]['file'],hsh[i]['digest'])
+                    print('read-from-log:',hashlog[i]['file'],hashlog[i]['digest'])
+                if err == True:
+                    msgBox=QtWidgets.QMessageBox(self)
+                    msgBox.setText(msg)
+                    msgBox.setInformativeText('Do you want to skip decryption?')
+                    msgBox.setStandardButtons(QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Yes)
+                    msgBox.setDefaultButton(QtWidgets.QMessageBox.Yes)
+                    skip=msgBox.exec()
+                    if skip == QtWidgets.QMessageBox.Yes:
+                        skip=True
+                    elif skip == QtWidgets.QMessageBox.No:
+                        skip=False
+                    #msgBox.show()
+            ecr=ewk.druugianNightmare()
+            tab['obj'].progressBar.setValue(0)
+            tab['obj'].progressBar.setFormat('%p%')
+        
+            if skip == False:
+                ecr.decryptFile(
+                        ifile=ld['ifile'],
+                        ofile=ld['ofile'],
+                        masterKeyPriv=ld['private_key'],
+                        key_list=ld['key_list'],
+                        password_to_masterKey=ld['password'],
+                        progress_callback=self.progress_crypt,
+                        tab=tab
+                        )
+            #self.tabDisable(self.dw,True)
+            tab['obj'].progressBar.setValue(0)
+            tab['obj'].progressBar.setFormat('%p%')
+        else:
+            self.statusBar().showMessage('Bad Fields: Check your paths.')
+        tab['running']=False
+        self.tabDisable(self.dw,True)
     #def buttons(me,self):
     #    self.dw['obj'].decrypt_file.clicked.connect(lambda: self.dw['controls'].decrypt_file(self))
 
@@ -63,6 +93,22 @@ class controls:
             field=local.findChildren(QtWidgets.QLineEdit,key,QtCore.Qt.FindChildrenRecursively)
             if field != None:
                 field[0].setText(val)
+            if key == 'ifile': 
+                if val != '':
+                    if os.path.splitext(val)[1] == '.ebin':
+                        ofile=os.path.splitext(val)[0]
+                    else:
+                        ofile=val+'.bin'
+                    key_list=os.path.splitext(val)[0]+'.ejk'
+                    hash_log=os.path.splitext(val)[0]+'.hash'
+                else:
+                    ofile=''
+                    key_list=''
+                    hash_log=''
+                for k,v in [['ofile',ofile],['key_list',key_list],['hash_log',hash_log]]:
+                    field=local.findChildren(QtWidgets.QLineEdit,k,QtCore.Qt.FindChildrenRecursively)
+                    field[0].setText(v)
+
 
     def buttons(me,self):
         self.dw['obj'].decrypt_file.clicked.connect(lambda: self.dw['controls'].decrypt_file(self,self.dw))
@@ -81,7 +127,7 @@ class controls:
 
     def valueChanged(me,self):
         local=self.dw['obj']
-        local.ifile.textChanged.connect(lambda: me.saveSetting(self,'ifile',local.ifile.text()))
+        local.ifile.textChanged.connect(lambda: me.saveSetting(self,'ifile',local.ifile.text(),setField=True))
         local.ofile.textChanged.connect(lambda: me.saveSetting(self,'ofile',local.ofile.text()))
         local.private_key.textChanged.connect(lambda: me.saveSetting(self,'private_key',local.private_key.text()))
         local.key_list.textChanged.connect(lambda: me.saveSetting(self,'key_list',local.key_list.text()))
@@ -116,7 +162,7 @@ class controls:
         else:
             exit('missing "{}" defaults config file'.format(self.field_defaults))
    
-
+    '''
     def gen_hashes(self,ifile,key_list,tab,progress_callback=None,chunksize=2048):
         hashes={}
         files={'key_list':key_list,'efile':ifile}
@@ -153,6 +199,7 @@ class controls:
             print(hashes)
         return hashes
     '''
+    #'''
     def gen_hashes(self,ifile,key_list,tab,progress_callback=None,chunksize=2048):
         files={'key_list':key_list,'efile':ifile}
         hashes={}
@@ -189,5 +236,5 @@ class controls:
             p[0].setFormat('%p%')
         p[1]().showMessage('')
         return hashes
-    '''
+    #'''
 

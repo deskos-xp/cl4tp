@@ -168,15 +168,20 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             return tab['obj'].progressBar,self.statusBar
 
     def tabDisable(self,tab,state):
-        tab['running']=state
+        #tab['running']=state
         if tab['settings']['mode'] == 'decrypt':
             self.encrypt.setEnabled(state)
         elif tab['settings']['mode'] == 'encrypt':
             self.decrypt.setEnabled(state)
 
         for i in tab['dialog'].findChildren((QtWidgets.QWidget)):
-            if i.objectName() != 'progressBar':
-                i.setEnabled(state)
+            if i.objectName() != 'progressBar': 
+                if i.objectName() == 'hash_log':
+                    print('#')
+                    if tab['obj'].checkHashes.isChecked() == True:
+                        i.setEnabled(state)
+                else:
+                    i.setEnabled(state)
 
     def missingKeyUpdate(self,ud_field=False,tab=None):
         if tab['settings']['mode'] == 'encrypt':
@@ -195,6 +200,59 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         else:
             return ''
 
+    def pathStatus(self,path,ofile=False):
+        p=os.path.expandvars(os.path.expanduser(path))
+        print(p)
+        if ofile == True:
+            return {
+                    'exists':os.path.exists(os.path.dirname(p)),
+                    }
+        else:
+            return {
+                'exists':os.path.exists(p),
+                'file':os.path.isfile(p),
+                }
+
+
+    def preCheck(self,tab):
+        local=tab['settings']
+        if local['mode'] == 'encrypt':
+            for key in ['ifile','ofile','public_key','key_list']:            
+                if key not in ['ofile','key_list']:
+                    status=self.pathStatus(local[key])
+                    print(status)
+                    if status['exists'] == False:
+                        return False
+                    if status['file'] == False:
+                        return False
+                else:
+                    status=self.pathStatus(local[key],ofile=True)
+                    print(status)
+                    if status['exists'] == False:
+                        return False
+        elif local['mode'] == 'decrypt':
+            for key in ['ifile','ofile','private_key','key_list','hash_log']:
+                if key != 'hash_log':
+                    if key != 'ofile':
+                        status=self.pathStatus(local[key])
+                        if status['exists'] == False:
+                            return False
+                        if status['file'] == False:
+                            return False
+                    else:
+                        status=self.pathStatus(local[key],ofile=True)
+                        if status['exists'] == False:
+                            return False
+                elif key == 'hash_log':
+                    if tab['obj'].checkHashes.isChecked() == True:
+                        status=self.pathStatus(local[key])
+                        if status['exists'] == False:
+                            return False
+                        if status['file'] == False:
+                            return False
+        else:
+            return None
+        return True
 
     def __init__(self):
         super(self.__class__,self).__init__()
@@ -232,6 +290,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                 'private_key':"",
                 'password':"",
                 'key_list':"",
+                'hash_log':"",
                 }
         self.dw['running']=False
         self.dw['controls']=lib_dw_controls.controls(self)
