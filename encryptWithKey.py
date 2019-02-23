@@ -132,7 +132,7 @@ class druugianNightmare:
                 keys=cipher.decrypt(d)
                 ofn.write(keys) 
 
-    def encryptFile(self,ifile,ofile,masterKeyPub,key_list=None,chunksize=2048,progress_callback=None,tab=None):
+    def encryptFile(self,ifile,ofile,masterKeyPub,key_list=None,chunksize=2048,progress_callback=None,tab=None,hash_log=None):
         if key_list == None:
             key_list=os.path.splitext(ifile)[0]+self.extE
         tmpName=os.path.splitext(key_list)[0]+self.extU
@@ -168,63 +168,8 @@ class druugianNightmare:
         os.remove(tmpName)
         #for file verification
         #p=progress_callback(tab)
-        self.generate_hash_log(
-                tab=tab,
-                ifile=ifile,
-                ofile=ofile,
-                key_list=key_list,
-                progress_callback=progress_callback,
-                chunksize=chunksize
-                )
         
-    def generate_hash_log(self,tab,ifile,ofile,key_list,progress_callback=None,chunksize=2048):
-        hash_log=os.path.join(
-                os.path.dirname(ofile),
-                os.path.basename(ifile)+'.hash'
-                )
-        size=os.path.getsize(ofile)
-        counter=0
         
-        hashes={}
-        files={'key_list':key_list,'efile':ofile}
-        
-        for key in files.keys():
-            hsh=SHA512.new()
-            if progress_callback != None:
-                p=progress_callback(tab)
-                p[0].setValue(0)
-                p[0].setFormat('%p%')
-                p[1]().showMessage('{} -> {}'.format(
-                    os.path.basename(files[key]),
-                    os.path.basename(hash_log)
-                    )
-                    )
-
-            with open(files[key],'rb') as of:
-                while True:
-                    data=of.read(chunksize)
-                    if not data:
-                        break
-                    counter+=len(data)
-                    if progress_callback != None:
-                        p[0].setFormat('Creating Hash Log - {}/{} - %p%'.format(
-                            en.EngNumber(counter,2),
-                            en.EngNumber(size,2)
-                            )
-                            )
-                        p[0].setValue(int((counter/size)*100))
-                    hsh.update(data)
-            hashes[key]={}
-            hashes[key]['digest']=hsh.hexdigest()
-            hashes[key]['file']=files[key]
-            p[0].setValue(0)
-            p[0].setFormat('%p%')
-        with open(hash_log,'w') as log:
-            json.dump(hashes,log)
-        if progress_callback != None:
-            p[1]().showMessage('')
-
-
     def decryptFile(self,ifile,ofile,masterKeyPriv,password_to_masterKey=None,key_list=None,progress_callback=None,tab=None):
         if key_list == None:
             key_list=os.path.splitext(ofile)[0]+self.extE

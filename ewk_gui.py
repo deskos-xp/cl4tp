@@ -48,6 +48,9 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.config['default-ofile-dir']=self.expand_path(self.config['default-ofile-dir'])
         if not os.path.exists(self.config['default-ofile-dir']):
             os.mkdir(self.config['default-ofile-dir'])
+        if os.path.exists(self.expand_path(self.config['app-icon'])):
+            icon=QtGui.QIcon(self.expand_path(self.config['app-icon']))
+            self.setWindowIcon(icon)
 
     def actors(self,tab):
         children=tab['dialog'].findChildren(QtWidgets.QLineEdit)
@@ -57,9 +60,14 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             if child.objectName() not in ['password','qt_spinbox_lineedit']:
                 #print(tab['settings']['mode'],count)
                 if child.objectName() == 'hash_log':
-                    if tab['obj'].checkHashes.isChecked() == True:
-                        if child.text() in ['',None]:
-                            count+=1
+                    if tab['settings']['mode'] == 'decrypt':
+                        if tab['obj'].checkHashes.isChecked() == True:
+                            if child.text() in ['',None]:
+                                count+=1
+                    elif tab['settings']['mode'] == 'encrypt':
+                        if tab['obj'].useHashes.isChecked() == True:
+                            if child.text() in ['',None]:
+                                count+=1
                 elif child.text() in ['',None]:
                     count+=1
         if count > 0:
@@ -177,9 +185,12 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         for i in tab['dialog'].findChildren((QtWidgets.QWidget)):
             if i.objectName() != 'progressBar': 
                 if i.objectName() == 'hash_log':
-                    print('#')
-                    if tab['obj'].checkHashes.isChecked() == True:
-                        i.setEnabled(state)
+                    if tab['settings']['mode'] == 'decrypt':
+                        if tab['obj'].checkHashes.isChecked() == True:
+                            i.setEnabled(state)
+                    elif tab['settings']['mode'] == 'encrypt':
+                        if tab['obj'].useHashes.isChecked() == True:
+                            i.setEnabled(state)
                 else:
                     i.setEnabled(state)
 
@@ -244,12 +255,18 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                         if status['exists'] == False:
                             return False
                 elif key == 'hash_log':
-                    if tab['obj'].checkHashes.isChecked() == True:
-                        status=self.pathStatus(local[key])
-                        if status['exists'] == False:
-                            return False
-                        if status['file'] == False:
-                            return False
+                    if tab['settings']['mode'] == 'decrypt':
+                        if tab['obj'].checkHashes.isChecked() == True:
+                            status=self.pathStatus(local[key])
+                            if status['exists'] == False:
+                                return False
+                            if status['file'] == False:
+                                return False
+                    if tab['settings']['mode'] == 'encrypt':
+                        if tab['obj'].useHashes.isChecked() == True:
+                            status=self.pathStatus(local[key],ofile=True)
+                            if status['exists'] == False:
+                                return False
         else:
             return None
         return True

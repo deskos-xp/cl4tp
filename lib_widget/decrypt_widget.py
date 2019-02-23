@@ -88,6 +88,8 @@ class Ui_decrypt(object):
         self.gridLayout.addWidget(self.browse_hashlog, 5, 2, 1, 1)
         self.hash_log = QtWidgets.QLineEdit(decrypt)
         self.hash_log.setEnabled(False)
+        self.hash_log.setDragEnabled(True)
+        self.hash_log.setClearButtonEnabled(True)
         self.hash_log.setObjectName("hash_log")
         self.gridLayout.addWidget(self.hash_log, 5, 1, 1, 1)
         self.gridLayout_2.addLayout(self.gridLayout, 1, 0, 1, 1)

@@ -5,7 +5,8 @@
 		"ifile":"",
 		"ofile":"",
 		"key_list":"",
-		"public_key":""
+		"public_key":"",
+		"hash_log":""
 	},
 	"decrypt":{
 		"mode":"decrypt",

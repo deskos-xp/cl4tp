@@ -7,6 +7,7 @@ from Crypto.Hash import SHA512
 import engineering_notation as en
 
 class controls:
+    failHL=[False,0]
     def __init__(me,self):
         me.valueChanged(self)
         me.buttons(self)
@@ -87,6 +88,7 @@ class controls:
     #    self.dw['obj'].decrypt_file.clicked.connect(lambda: self.dw['controls'].decrypt_file(self))
 
     def saveSetting(me,self,key,val,setField=False):
+        me.failHL=[False,0]
         self.dw['settings'][key]=val
         if setField == True:
             local=self.dw['dialog']
@@ -109,6 +111,53 @@ class controls:
                     field=local.findChildren(QtWidgets.QLineEdit,k,QtCore.Qt.FindChildrenRecursively)
                     field[0].setText(v)
 
+        if key in ['ifile','hash_log']:
+            tab=self.dw
+            skipNext=False
+            try:
+                #need to force hash log to be incorrect for the following situations
+                keys={}
+                print(me.failHL)
+                if os.path.exists(tab['settings']['hash_log']):
+                    with open(tab['settings']['hash_log'],'r') as log:
+                        keys=json.load(log) 
+                    if keys == {}:
+                        skipNext=True
+                        me.failHL[0]=True
+                        me.failHL[1]+=1
+                        me.displayError(self,'Hash Log is empty: Not using hash log!')
+                        #show messagebox if log is empty
+                    #do a check to see if log contains proper structure
+                    if skipNext == False:
+                        structure=me.checkLogStructure(self,keys)
+                        if structure == False:
+                            skipNext=True
+                            me.failHL[0]=True
+                            me.failHL[1]+=1
+                            #show messageBox if log is not properly structured
+                            me.displayError(self,'Invalid Hash Log Structure: Not using hash log!')
+                    me.fail=[False,0]
+            except json.decoder.JSONDecodeError:
+                skipNext=True
+                me.failHL[0]=True
+                me.failHL[1]+=1
+                me.displayError(self,'Hash Log does not appear to be in the JSON format: Not using hash log!')
+            if me.failHL[0] == True:
+                tab['obj'].checkHashes.setChecked(False)
+            else:
+                self.statusBar().showMessage('')
+
+    def displayError(me,self,msg):
+        print(me.failHL)
+        if me.failHL == [True,1]:
+            self.statusBar().showMessage(msg)
+            mb=QtWidgets.QMessageBox(self)
+            mb.setText(msg)
+            mb.setIcon(QtWidgets.QMessageBox.Critical)
+            mb.show()
+
+    def checkLogStructure(me,self,logData):
+        return True
 
     def buttons(me,self):
         self.dw['obj'].decrypt_file.clicked.connect(lambda: self.dw['controls'].decrypt_file(self,self.dw))

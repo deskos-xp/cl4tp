@@ -1,9 +1,9 @@
 <todos>
 	<list>
-		add icon
-		add functionaliy to encrypt tab to save specific hash log name
+		create new icon 'icons/application.png'
 		add utility to create new rsa-key
 		add utility to edit settings
 		add utility to edit application defaults
+		add functionality to check the structure of hash log and return a bool based on structure validity
 	</list>
 </todos>

@@ -3,14 +3,64 @@
 from PyQt5 import QtWidgets,QtCore,QtGui
 import os,json,sys
 import encryptWithKey as ewk
-
+from Crypto.Hash import SHA512
+import engineering_notation as en
 class controls:
     def __init__(me,self):
         me.valueChanged(self)
         me.buttons(self)
         self.timed_actions(self.ew)
+    
+    def generate_hash_log(self,tab,ifile,ofile,key_list,progress_callback=None,chunksize=2048,hash_log=None):
+        if hash_log == None:
+            hash_log=os.path.join(
+                    os.path.dirname(ofile),
+                    os.path.basename(ifile)+'.hash'
+                    )
+        size=os.path.getsize(ofile)
+        counter=0
+        
+        hashes={}
+        files={'key_list':key_list,'efile':ofile}
+        
+        for key in files.keys():
+            hsh=SHA512.new()
+            if progress_callback != None:
+                p=progress_callback(tab)
+                p[0].setValue(0)
+                p[0].setFormat('%p%')
+                p[1]().showMessage('{} -> {}'.format(
+                    os.path.basename(files[key]),
+                    os.path.basename(hash_log)
+                    )
+                    )
+
+            with open(files[key],'rb') as of:
+                while True:
+                    data=of.read(chunksize)
+                    if not data:
+                        break
+                    counter+=len(data)
+                    if progress_callback != None:
+                        p[0].setFormat('Creating Hash Log - {}/{} - %p%'.format(
+                            en.EngNumber(counter,2),
+                            en.EngNumber(size,2)
+                            )
+                            )
+                        p[0].setValue(int((counter/size)*100))
+                    hsh.update(data)
+            hashes[key]={}
+            hashes[key]['digest']=hsh.hexdigest()
+            hashes[key]['file']=files[key]
+            p[0].setValue(0)
+            p[0].setFormat('%p%')
+        with open(hash_log,'w') as log:
+            json.dump(hashes,log)
+        if progress_callback != None:
+            p[1]().showMessage('')
 
     reset_called=False
+
     def encrypt_file(me,self,tab):
         tab['running']=True
         self.statusBar().showMessage('')
@@ -33,11 +83,31 @@ class controls:
                     progress_callback=self.progress_crypt,
                     tab=tab
                     )
+            if tab['obj'].useHashes.isChecked() == True:    
+                me.generate_hash_log(
+                    tab=tab,
+                    ifile=ld['ifile'],
+                    ofile=ld['ofile'],
+                    key_list=ld['key_list'],
+                    progress_callback=self.progress_crypt,
+                    chunksize=ld['dataChunkSize'],
+                    hash_log=ld['hash_log']
+                    )
             self.tabDisable(self.ew,True)
+            
         else:
             self.tabDisable(self.ew,True)
             self.statusBar().showMessage('Bad Fields: Check your paths!')
+        tab['obj'].progressBar.setValue(0)
+        tab['obj'].progressBar.setFormat('%p%')
         tab['running']=False
+
+
+    def enable_hashLog(me,self):
+        ew=self.ew['obj']
+        state=ew.useHashes.isChecked()
+        ew.browse_hash_log.setEnabled(state)
+        ew.hash_log.setEnabled(state)
 
     def saveSetting(me,self,key,val,setField=False):
         self.ew['settings'][key]=val
@@ -54,11 +124,11 @@ class controls:
                     val=os.path.join(self.config['default-ofile-dir'],os.path.basename(val))
                     ofile=val+'.ebin'
                     key_list=val+'.ejk'
-                    #hash_log=val+'.hash'
+                    hash_log=val+'.hash'
                 else:
                     ofile=''
                     key_list=''
-                for k,v in [['ofile',ofile],['key_list',key_list]]:
+                for k,v in [['ofile',ofile],['key_list',key_list],['hash_log',hash_log]]:
                     field=local.findChildren(QtWidgets.QLineEdit,k,QtCore.Qt.FindChildrenRecursively)
                     field[0].setText(v)
             else:
@@ -71,6 +141,7 @@ class controls:
         self.ew['obj'].browse_ofile.clicked.connect(lambda: me.saveSetting(self,'ofile',self.fmanager('ofile',self.ew),setField=True))
         self.ew['obj'].browse_keylist.clicked.connect(lambda: me.saveSetting(self,'key_list',self.fmanager('key_list',self.ew),setField=True))
         self.ew['obj'].browse_public_key.clicked.connect(lambda: me.saveSetting(self,'public_key',self.fmanager('public_key',self.ew),setField=True))
+        self.ew['obj'].browse_hash_log.clicked.connect(lambda: me.saveSetting(self,'hash_log',self.fmanager('hash_log',self.ew),setField=True))
 
     def valueChanged(me,self):
         local=self.ew['obj']
@@ -78,7 +149,9 @@ class controls:
         local.ofile.textChanged.connect(lambda: me.saveSetting(self,'ofile',local.ofile.text()))
         local.public_key.textChanged.connect(lambda: me.saveSetting(self,'public_key',local.public_key.text()))
         local.key_list.textChanged.connect(lambda: me.saveSetting(self,'key_list',local.key_list.text()))
+        local.hash_log.textChanged.connect(lambda: me.saveSetting(self,'hash_log',local.hash_log.text()))
         local.dataChunkSize.valueChanged.connect(lambda: me.saveSetting(self,'dataChunkSize',local.dataChunkSize.value()))
+        local.useHashes.toggled.connect(lambda: me.enable_hashLog(self))
 
     def reset_fields(me,self):
         me.reset_called=True
@@ -95,6 +168,7 @@ class controls:
         local.public_key.setText(settings['public_key'])
         local.key_list.setText(settings['key_list'])
         local.dataChunkSize.setValue(settings['dataChunkSize'])
+        local.hash_log.setText(settings['hash_log'])
 
     def clear_settings(me,self):
         if os.path.exists(self.field_defaults):

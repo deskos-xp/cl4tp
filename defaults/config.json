@@ -9,5 +9,6 @@
             "filter-private-key":"Key File (*.key);;Private Key (*.priv);;All Files (*)",
             "filter-key-list":"Encrypted Json Key List (*.ejk);;All Files (*)",
 	    "filter-hash-log":"Hash Log (*.hash);;All Files (*)",
-	    "default-start-tab":"encrypt"
+	    "default-start-tab":"encrypt",
+	    "app-icon":"icons/application.png"
 }
