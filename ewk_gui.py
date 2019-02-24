@@ -15,6 +15,9 @@ import libControl
 import encrypt_widget,decrypt_widget
 import lib_ew_controls,lib_dw_controls
 import engineering_notation as en
+import logging
+logging.basicConfig(filename='ewk-errors.log',format="%(asctime)s %(message)s",datefmt='%m/%d/%Y %H:%M:%S',level=logging.ERROR)
+
 class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
     field_defaults='./defaults/default.json'
     config={
@@ -32,6 +35,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
     config_file='./defaults/config.json'
     ext='.ebin'
     keyExt='.ejk'
+    logger=logging
     def expand_path(self,path):
         return os.path.expanduser(os.path.expandvars(path))
 

@@ -5,6 +5,8 @@ import os,json
 import encryptWithKey as ewk
 from Crypto.Hash import SHA512
 import engineering_notation as en
+#import logging
+#logging.basicConfig(filename='ewk-errors.log',format="%(asctime)s %(message)s",dateformat='%m/%d/%Y %H:%M:%S',level=logging.ERROR)
 
 class controls:
     failHL=[False,0]
@@ -68,15 +70,20 @@ class controls:
             tab['obj'].progressBar.setFormat('%p%')
         
             if skip == False:
-                ecr.decryptFile(
-                        ifile=ld['ifile'],
-                        ofile=ld['ofile'],
-                        masterKeyPriv=ld['private_key'],
-                        key_list=ld['key_list'],
-                        password_to_masterKey=ld['password'],
-                        progress_callback=self.progress_crypt,
-                        tab=tab
-                        )
+                try:
+                    ecr.decryptFile(
+                            ifile=ld['ifile'],
+                            ofile=ld['ofile'],
+                            masterKeyPriv=ld['private_key'],
+                            key_list=ld['key_list'],
+                            password_to_masterKey=ld['password'],
+                            progress_callback=self.progress_crypt,
+                            tab=tab
+                            )
+                except Exception as e:
+                    print(e)
+                    self.statusBar().showMessage('could not {} file, see log: {}'.format(tab['settings']['mode'],e))
+                    self.logger.error('{} | {}'.format(e,json.dumps(tab['settings'])))
             #self.tabDisable(self.dw,True)
             tab['obj'].progressBar.setValue(0)
             tab['obj'].progressBar.setFormat('%p%')
@@ -110,42 +117,55 @@ class controls:
                 for k,v in [['ofile',ofile],['key_list',key_list],['hash_log',hash_log]]:
                     field=local.findChildren(QtWidgets.QLineEdit,k,QtCore.Qt.FindChildrenRecursively)
                     field[0].setText(v)
+        me.checkHashLog(self,self.dw,key,val)
 
-        if key in ['ifile','hash_log']:
-            tab=self.dw
-            skipNext=False
-            try:
-                #need to force hash log to be incorrect for the following situations
-                keys={}
-                print(me.failHL)
-                if os.path.exists(tab['settings']['hash_log']):
-                    with open(tab['settings']['hash_log'],'r') as log:
-                        keys=json.load(log) 
-                    if keys == {}:
+    def checkHashLog(me,self,tab,key,val):
+        if os.path.exists(self.expand_path(val)):
+            if key in ['ifile','hash_log']:
+                skipNext=False
+                if tab['obj'].checkHashes.isChecked() == True:
+                    try:
+                        #need to force hash log to be incorrect for the following situations
+                        keys={}
+                        print(me.failHL)
+                        if os.path.exists(tab['settings']['hash_log']):
+                            with open(tab['settings']['hash_log'],'r') as log:
+                                keys=json.load(log) 
+                            if keys == {}:
+                                skipNext=True
+                                me.failHL[0]=True
+                                me.failHL[1]+=1
+                                msg='Hash Log is empty: Not using hash log! : '.format(tab['settings']['hash_log'])
+                                me.displayError(self,msg)
+                                if me.failHL[1] == 1:
+                                    self.logger.error(msg)
+                                #show messagebox if log is empty
+                            #do a check to see if log contains proper structure
+                            if skipNext == False:
+                                structure=me.checkLogStructure(self,keys)
+                                if structure == False:
+                                    skipNext=True
+                                    me.failHL[0]=True
+                                    me.failHL[1]+=1
+                                    #show messageBox if log is not properly structured
+                                    msg='Invalid Hash Log Structure: Not using hash log! : {}'.format(tab['settings']['hash_log'])
+                                    me.displayError(self,msg)
+                                    if me.failHL[1] == 1:
+                                        self.logger.error(msg)                
+                            me.fail=[False,0]
+                    except json.decoder.JSONDecodeError:
                         skipNext=True
                         me.failHL[0]=True
                         me.failHL[1]+=1
-                        me.displayError(self,'Hash Log is empty: Not using hash log!')
-                        #show messagebox if log is empty
-                    #do a check to see if log contains proper structure
-                    if skipNext == False:
-                        structure=me.checkLogStructure(self,keys)
-                        if structure == False:
-                            skipNext=True
-                            me.failHL[0]=True
-                            me.failHL[1]+=1
-                            #show messageBox if log is not properly structured
-                            me.displayError(self,'Invalid Hash Log Structure: Not using hash log!')
-                    me.fail=[False,0]
-            except json.decoder.JSONDecodeError:
-                skipNext=True
-                me.failHL[0]=True
-                me.failHL[1]+=1
-                me.displayError(self,'Hash Log does not appear to be in the JSON format: Not using hash log!')
-            if me.failHL[0] == True:
-                tab['obj'].checkHashes.setChecked(False)
-            else:
-                self.statusBar().showMessage('')
+                        msg='Hash Log does not appear to be in the JSON format: Not using hash log! : {}'.format(tab['settings']['hash_log'])
+                        me.displayError(self,msg)
+                        if me.failHL[1] == 1:
+                            self.logger.error(msg)
+                    if me.failHL[0] == True:
+                        tab['obj'].checkHashes.setChecked(False)
+                        tab['obj'].hash_log.setText('')
+                    else:
+                        self.statusBar().showMessage('')
 
     def displayError(me,self,msg):
         print(me.failHL)
@@ -157,6 +177,13 @@ class controls:
             mb.show()
 
     def checkLogStructure(me,self,logData):
+        for keyRoot in logData.keys():
+            if keyRoot in ['efile','key_list']:
+                for keyRootSub_0 in logData[keyRoot].keys():
+                    if keyRootSub_0 not in ['file','digest']:
+                        return False
+            else:
+                return False
         return True
 
     def buttons(me,self):
@@ -173,6 +200,7 @@ class controls:
         state=dw.checkHashes.isChecked()
         dw.browse_hashlog.setEnabled(state)
         dw.hash_log.setEnabled(state)
+        me.checkHashLog(self,self.dw,'hash_log',dw.hash_log.text())
 
     def valueChanged(me,self):
         local=self.dw['obj']

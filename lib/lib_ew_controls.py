@@ -5,6 +5,9 @@ import os,json,sys
 import encryptWithKey as ewk
 from Crypto.Hash import SHA512
 import engineering_notation as en
+#import logging
+#logging.basicConfig(filename='ewk-errors.log',level=logging.ERROR)
+
 class controls:
     def __init__(me,self):
         me.valueChanged(self)
@@ -74,15 +77,21 @@ class controls:
             ecr=ewk.druugianNightmare()
             tab['obj'].progressBar.setValue(0)
             tab['obj'].progressBar.setFormat('%p%')
-            ecr.encryptFile(
-                    ifile=ld['ifile'],
-                    ofile=ld['ofile'],
-                    masterKeyPub=ld['public_key'],
-                    key_list=ld['key_list'],
-                    chunksize=ld['dataChunkSize'],
-                    progress_callback=self.progress_crypt,
-                    tab=tab
-                    )
+            try:
+                ecr.encryptFile(
+                        ifile=ld['ifile'],
+                        ofile=ld['ofile'],
+                        masterKeyPub=ld['public_key'],
+                        key_list=ld['key_list'],
+                        chunksize=ld['dataChunkSize'],
+                        progress_callback=self.progress_crypt,
+                        tab=tab
+                        )
+            except Exception as e:
+                    print(e)
+                    self.statusBar().showMessage('could not {} file, see log: {}'.format(tab['settings']['mode'],e))
+                    self.logger.error('{} | {}'.format(e,json.dumps(tab['settings'])))
+
             if tab['obj'].useHashes.isChecked() == True:    
                 me.generate_hash_log(
                     tab=tab,
@@ -120,6 +129,7 @@ class controls:
             if me.reset_called == False:
                 self.missingKeyUpdate(ud_field=True,tab=self.ew)
                 local=self.ew['dialog']
+                hash_log=''
                 if val != '':
                     val=os.path.join(self.config['default-ofile-dir'],os.path.basename(val))
                     ofile=val+'.ebin'
