@@ -4,7 +4,6 @@
 		add utility to create new rsa-key
 		add utility to edit settings
 		add utility to edit application defaults
-		add functionality to check the structure of hash log and return a bool based on structure validity
 		add functionality to use ed25519 for file encryption/decryption
 	</list>
 </todos>
