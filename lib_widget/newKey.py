@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file './ui/newKey.ui'
+#
+# Created by: PyQt5 UI code generator 5.11.3
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_newKey(object):
+    def setupUi(self, newKey):
+        newKey.setObjectName("newKey")
+        newKey.resize(400, 300)
+        self.gridLayout_2 = QtWidgets.QGridLayout(newKey)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.gridLayout = QtWidgets.QGridLayout()
+        self.gridLayout.setObjectName("gridLayout")
+        self.label = QtWidgets.QLabel(newKey)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
+        self.label_3 = QtWidgets.QLabel(newKey)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 0, 0, 1, 1)
+        self.public_key = QtWidgets.QLineEdit(newKey)
+        self.public_key.setDragEnabled(True)
+        self.public_key.setClearButtonEnabled(True)
+        self.public_key.setObjectName("public_key")
+        self.gridLayout.addWidget(self.public_key, 1, 1, 1, 1)
+        self.password = QtWidgets.QLineEdit(newKey)
+        self.password.setEnabled(False)
+        self.password.setEchoMode(QtWidgets.QLineEdit.PasswordEchoOnEdit)
+        self.password.setDragEnabled(True)
+        self.password.setClearButtonEnabled(True)
+        self.password.setObjectName("password")
+        self.gridLayout.addWidget(self.password, 3, 1, 1, 1)
+        self.private_key = QtWidgets.QLineEdit(newKey)
+        self.private_key.setDragEnabled(True)
+        self.private_key.setClearButtonEnabled(True)
+        self.private_key.setObjectName("private_key")
+        self.gridLayout.addWidget(self.private_key, 2, 1, 1, 1)
+        self.encrypted_private = QtWidgets.QCheckBox(newKey)
+        self.encrypted_private.setObjectName("encrypted_private")
+        self.gridLayout.addWidget(self.encrypted_private, 3, 0, 1, 1)
+        self.browse_private_key = QtWidgets.QPushButton(newKey)
+        self.browse_private_key.setObjectName("browse_private_key")
+        self.gridLayout.addWidget(self.browse_private_key, 2, 2, 1, 1)
+        self.size = QtWidgets.QSpinBox(newKey)
+        self.size.setWrapping(False)
+        self.size.setAccelerated(True)
+        self.size.setMaximum(999999999)
+        self.size.setProperty("value", 2048)
+        self.size.setObjectName("size")
+        self.gridLayout.addWidget(self.size, 0, 1, 1, 1)
+        self.label_2 = QtWidgets.QLabel(newKey)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 2, 0, 1, 1)
+        self.browse_public_key = QtWidgets.QPushButton(newKey)
+        self.browse_public_key.setObjectName("browse_public_key")
+        self.gridLayout.addWidget(self.browse_public_key, 1, 2, 1, 1)
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem, 4, 1, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
+        self.gridLayout_4 = QtWidgets.QGridLayout()
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.save = QtWidgets.QPushButton(newKey)
+        self.save.setEnabled(False)
+        self.save.setObjectName("save")
+        self.gridLayout_4.addWidget(self.save, 0, 0, 1, 1)
+        self.clear = QtWidgets.QPushButton(newKey)
+        self.clear.setEnabled(False)
+        self.clear.setObjectName("clear")
+        self.gridLayout_4.addWidget(self.clear, 0, 1, 1, 1)
+        self.close = QtWidgets.QPushButton(newKey)
+        self.close.setObjectName("close")
+        self.gridLayout_4.addWidget(self.close, 0, 2, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout_4, 2, 0, 1, 1)
+
+        self.retranslateUi(newKey)
+        QtCore.QMetaObject.connectSlotsByName(newKey)
+
+    def retranslateUi(self, newKey):
+        _translate = QtCore.QCoreApplication.translate
+        newKey.setWindowTitle(_translate("newKey", "New RSA Key"))
+        self.label.setText(_translate("newKey", "Public Key"))
+        self.label_3.setText(_translate("newKey", "Size"))
+        self.encrypted_private.setText(_translate("newKey", "Encrypted\n"
+"Private Key"))
+        self.browse_private_key.setText(_translate("newKey", "Browse"))
+        self.label_2.setText(_translate("newKey", "Private Key"))
+        self.browse_public_key.setText(_translate("newKey", "Browse"))
+        self.save.setText(_translate("newKey", "Save"))
+        self.clear.setText(_translate("newKey", "Clear"))
+        self.close.setText(_translate("newKey", "Close"))
+

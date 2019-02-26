@@ -72,8 +72,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>754</width>
-                 <height>483</height>
+                 <width>98</width>
+                 <height>28</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_10">
@@ -94,6 +94,7 @@
     </item>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -108,16 +109,21 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_Quit"/>
+    <addaction name="action_N_RSA_Key"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Quit">
    <property name="text">
     <string>&amp;Quit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_N_RSA_Key">
+   <property name="text">
+    <string>&amp;New RSA Key</string>
    </property>
   </action>
  </widget>

@@ -15,11 +15,18 @@ import libControl
 import encrypt_widget,decrypt_widget
 import lib_ew_controls,lib_dw_controls
 import engineering_notation as en
+
+import lib_newKey,newKey
+
+#error logging
 import logging
 logging.basicConfig(filename='ewk-errors.log',format="%(asctime)s %(message)s",datefmt='%m/%d/%Y %H:%M:%S',level=logging.ERROR)
 
 class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
-    field_defaults='./defaults/default.json'
+    conf_dir='./defaults'
+    field_defaults=os.path.join(conf_dir,'default.json')
+    newKey_defaults=os.path.join(conf_dir,'newKey.json')
+    config_file=os.path.join(conf_dir,'config.json')
     config={
             'ssh-dir':'~/.ssh',
             'default-ofile-dir':'~/ekw-save',
@@ -32,7 +39,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             'filter-key-list':'Encrypted Json Key List (*.ejk);;All Files(*)',
             'filter-hash-log':'Hash Log (*.hash);;All Files (*)',
             }
-    config_file='./defaults/config.json'
+    #config_file='./defaults/config.json'
     ext='.ebin'
     keyExt='.ejk'
     logger=logging
@@ -149,6 +156,11 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-public-key'])
         if mode == 'private_key':
             file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-private-key'])
+        if mode == 'public_key_save':
+            file=QtWidgets.QFileDialog.getSaveFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-public-key'])
+        if mode == 'private_key_save':
+            file=QtWidgets.QFileDialog.getSaveFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-private-key'])
+
         if mode == 'key_list':
             if tab['settings']['mode'] == 'decrypt':
                 file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['default-ofile-dir'],filter=self.config['filter-key-list'])
@@ -316,6 +328,22 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.dw['running']=False
         self.dw['controls']=lib_dw_controls.controls(self)
         self.decrypt_layout.addWidget(self.dw['dialog'])
+        
+        #setup secondary tools
+        self.nk={}
+        self.nk['dialog']=QtWidgets.QDialog(self)
+        self.nk['obj']=newKey.Ui_newKey()
+        self.nk['obj'].setupUi(self.nk['dialog'])
+        self.nk['settings']={
+                'size':None,
+                'private_key':None,
+                'public_key':None,
+                'encrypted_private':False,
+                'password':None,
+                'gen_private':None,
+                'gen_public':None,
+                }
+        self.nk['controls']=lib_newKey.controls(self)
 
 
         #setup controls
@@ -332,8 +360,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                 failTab+=1
         if failTab == self.tabWidget.count():
             print('invalid default-start-tab value in config')
-        
-        
+                        
 if __name__ == "__main__":
     a=QtWidgets.QApplication(sys.argv)
     app=ewk_gui()

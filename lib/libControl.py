@@ -12,6 +12,7 @@ class controls:
 
     def actions(me,self):
         self.action_Quit.triggered.connect(QtWidgets.QApplication.quit)
+        self.action_N_RSA_Key.triggered.connect(self.nk['dialog'].show)
     '''
     def buttons(me,self):
         #self.ew['obj'].encrypt_file.clicked.connect(lambda: self.ew['controls'].encrypt_file(self))
