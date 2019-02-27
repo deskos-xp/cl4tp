@@ -3,16 +3,20 @@ from PyQt5 import QtWidgets,QtCore,QtGui
 import engineering_notation as ne
 from Crypto.PublicKey import RSA
 import json,os,sys
-import copy
+import copy,time
 #self refers to the class in lib_ewk_gui.py
 #me.* refers to the local class
 #this allows for more namespace flexibility
 
 class controls:
+    public_was_focused_once=False
+    textChanged=False
+    done=True
     def __init__(me,self):
         me.load_defaults(self)
         me.buttons(self)
         me.valueChanged(self)
+        me.timed(self)
 
     def load_defaults(me,self):
         #disk io is slow, load only once, or only as necessary
@@ -102,15 +106,18 @@ class controls:
             obj['gen_private']=tmp.export_key('PEM')
             obj['gen_public']=tmp.publickey().export_key()
 
+        if os.path.exists(self.nk['settings']['private_key']):
+            self.logger.error('private key file "{}" exists'.format(self.nk['settings']['private_key']))
+
+        if os.path.exists(self.nk['settings']['public_key']):
+            self.logger.error('public key file "{}" exists'.format(self.nk['settings']['public_key']))
+
     def saveSetting(me,self,nk,key,val,setField=False):
+        me.done=False
         ext='.key'
         me.allow_clear(self)
         me.ready(self)
         self.nk['settings'][key]=val
-        #print(val)
-        if key == 'private_key':
-            self.nk['obj'].public_key.setText(val+'.pub'+ext)
-                                            
         if key == 'encrypted_private':
             self.nk['obj'].password.setEnabled(val)
         if setField == True:
@@ -133,7 +140,66 @@ class controls:
                         obj.setValue(val)
                     if type(obj) == type(QtWidgets.QCheckBox()):
                         obj.setChecked(val)
+        me.textChanged=True
+        me.done=True
 
+    def timed(me,self):
+        self.nk['timer']=QtCore.QTimer()
+        self.nk['timer'].timeout.connect(lambda: me.timer_actions(self))
+        self.nk['timer'].start(100)
+
+    def editActor(me,lineEdit,ext,focused):
+        if focused !=  None:
+            if focused.objectName() != lineEdit.objectName():
+                if os.path.splitext(lineEdit.text())[1] != ext and lineEdit.text() != '':
+                    if os.path.splitext(os.path.split(lineEdit.text())[1])[0].lower() not in ['','.key']:
+                        if os.path.splitext(lineEdit.text())[1] == '':
+                            lineEdit.setText(os.path.splitext(lineEdit.text())[0]+ext)
+                    else:
+                        lineEdit.setText('')
+
+    def timer_actions(me,self):
+        #dont force extension,God Dammit!
+        pass
+        '''
+        focused=QtWidgets.QApplication.focusWidget()
+        lo=self.nk['obj']
+        ext='.key'
+        me.editActor(lo.private_key,ext,focused)
+        me.editActor(lo.public_key,ext,focused)
+        if lo.public_key.text() == lo.private_key.text():
+            if ( lo.public_key.text() != '' ) and ( lo.private_key.text() != '' ):
+                lo.public_key.setText(
+                        os.path.splitext(
+                            lo.public_key.text()
+                            )[0].upper()+ext
+                )
+        if me.public_was_focused_once == False:
+            #lo.public_key.setText(os.path.splitext(lo.private_key.text())[0].upper()+ext)
+            if lo.public_key.text() == '' and lo.private_key.text() != '':
+                lo.public_key.setText(os.path.splitext(lo.private_key.text())[0].upper()+ext)
+
+        if lo.public_key.text() == '':
+            me.public_was_focused_once=False
+        if lo.public_key.text() == '.key':
+            lo.public_key.setText('')
+
+        if focused != None:
+            if focused.objectName() == 'private_key':
+                if len(focused.text()) >= len(ext) and me.textChanged == True:
+                    focused.setCursorPosition(len(lo.private_key.text())-len(ext)) 
+            if focused.objectName() == 'public_key':
+                me.public_was_focused_once=True
+                if len(focused.text()) >= len(ext) and me.textChanged == True:
+                    focused.setCursorPosition(len(lo.public_key.text())-len(ext))
+
+        if time.localtime().tm_sec % 60 == 0:
+            if me.done == True:
+                me.textChanged=False
+                    
+        #if os.path.splitext(lo.public_key.text())[1] != ext and lo.public_key.text() != '':
+        #    lo.public_key.setText(lo.public_key.text()+ext)
+        '''
 
     def close_dialog(me,self,dialog,obj):
         #me.reset_fields(self,obj)

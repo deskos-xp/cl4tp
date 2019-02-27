@@ -78,6 +78,15 @@ class Ui_newKey(object):
 
         self.retranslateUi(newKey)
         QtCore.QMetaObject.connectSlotsByName(newKey)
+        newKey.setTabOrder(self.private_key, self.public_key)
+        newKey.setTabOrder(self.public_key, self.size)
+        newKey.setTabOrder(self.size, self.encrypted_private)
+        newKey.setTabOrder(self.encrypted_private, self.password)
+        newKey.setTabOrder(self.password, self.browse_public_key)
+        newKey.setTabOrder(self.browse_public_key, self.browse_private_key)
+        newKey.setTabOrder(self.browse_private_key, self.save)
+        newKey.setTabOrder(self.save, self.clear)
+        newKey.setTabOrder(self.clear, self.close)
 
     def retranslateUi(self, newKey):
         _translate = QtCore.QCoreApplication.translate

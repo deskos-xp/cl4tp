@@ -159,6 +159,18 @@ Private Key</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>private_key</tabstop>
+  <tabstop>public_key</tabstop>
+  <tabstop>size</tabstop>
+  <tabstop>encrypted_private</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>browse_public_key</tabstop>
+  <tabstop>browse_private_key</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>clear</tabstop>
+  <tabstop>close</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
