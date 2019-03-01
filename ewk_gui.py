@@ -101,7 +101,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         tab['timer']['0'].start(10)
 
 
-    def fmanager(self,mode,tab):
+    def fmanager(self,mode,tab,returnExt=False):
         if mode == 'hash_log':
             key='filter-hash-log'
             fd=''
@@ -179,9 +179,15 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             if os.path.splitext(file[0])[1] == '':
                 return file[0]+self.keyExt 
         if file == ('',''):
-            return ''
+            if returnExt == False:
+                return ''
+            else:
+                return '',''
         else:
-            return file[0]
+            if returnExt == False:
+                return file[0]
+            else:
+                return file
     
     def progress_crypt(self,tab,chunks=None,size=None):
         if chunks != None and size != None:

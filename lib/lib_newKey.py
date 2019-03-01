@@ -38,8 +38,8 @@ class controls:
         nk.close.clicked.connect(lambda: me.close_dialog(self,self.nk['dialog'],nk))
         nk.save.clicked.connect(lambda: me.save(self))
         nk.clear.clicked.connect(lambda: me.clear_fields(self)) 
-        nk.browse_public_key.clicked.connect(lambda: me.saveSetting(self,self.nk,'public_key',self.fmanager('public_key_save',tab=None),setField=True))
-        nk.browse_private_key.clicked.connect(lambda: me.saveSetting(self,self.nk,'private_key',self.fmanager('private_key_save',tab=None),setField=True))
+        nk.browse_public_key.clicked.connect(lambda: me.saveSetting(self,self.nk,'public_key',self.fmanager('public_key_save',tab=None,returnExt=True),setField=True))
+        nk.browse_private_key.clicked.connect(lambda: me.saveSetting(self,self.nk,'private_key',self.fmanager('private_key_save',tab=None,returnExt=True),setField=True))
 
     def valueChanged(me,self):
         nk=self.nk['obj']
@@ -97,7 +97,16 @@ class controls:
         if mode == 'save':
             self.nk['obj'].save.setEnabled(state)
 
-    def genKey(me,self,obj):
+    def warnDialog(me,self,msg):
+        self.logger.error('private key file "{}" exists'.format(self.nk['settings']['private_key']))
+        dialog=QtWidgets.QMessageBox(self)
+        dialog.setIcon(QtWidgets.QMessageBox.Warning)
+        dialog.setText(msg.format('Private Key',self.nk['settings']['private_key']))
+        dialog.setStandardButtons(QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No)
+        return dialog.exec()
+
+    def generate(me,self,obj):
+        self.statusBar().showMessage('Generating Keys!')
         tmp=RSA.generate(obj['size'])
         if obj['encrypted_private'] == True:
             obj['gen_private']=tmp.export_key('PEM',passphrase=obj['password'])
@@ -105,19 +114,48 @@ class controls:
         else:
             obj['gen_private']=tmp.export_key('PEM')
             obj['gen_public']=tmp.publickey().export_key()
+        files=(
+                (obj['private_key'],obj['gen_private']),
+                (obj['public_key'],obj['gen_public']),
+                    )
+        for f,data in files:
+            with open(f,'wb') as out:
+                out.write(data+b'\n')
+        self.statusBar().showMessage('Done!')
 
+    def genKey(me,self,obj):
+        msg='{} "{}" exists! Do you want to overwrite it?'
+        res=None
         if os.path.exists(self.nk['settings']['private_key']):
             self.logger.error('private key file "{}" exists'.format(self.nk['settings']['private_key']))
-
+            res=me.warnDialog(self,msg)
         if os.path.exists(self.nk['settings']['public_key']):
             self.logger.error('public key file "{}" exists'.format(self.nk['settings']['public_key']))
+            res=me.warnDialog(self,msg)
+        
+        if res != None:
+            if res == QtWidgets.QMessageBox.Yes:
+                me.generate(self,obj)
+            else:
+                self.logger.error('user chose to not create keys!')
+        else:
+            me.generate(self,obj)
 
     def saveSetting(me,self,nk,key,val,setField=False):
-        me.done=False
-        ext='.key'
+        #me.done=False
+        if type(val) != type(tuple()):
+            ext='.key'
+        else:
+            try:
+                ext=val[1].split('*')[1][:-1]
+                val=val[0]
+            except:
+                return None
         me.allow_clear(self)
         me.ready(self)
+
         self.nk['settings'][key]=val
+        
         if key == 'encrypted_private':
             self.nk['obj'].password.setEnabled(val)
         if setField == True:
@@ -135,13 +173,18 @@ class controls:
                                     self.nk['obj'].public_key.setText(pval+'.pub'+ext)
                                 if os.path.splitext(val)[1] != ext:
                                     val+='.key'
+                        if obj.objectName() == 'public_key':
+                            pval=val
+                            if os.path.splitext(val)[1] != ext:
+                                val+='.pub'+ext
+                                print(obj.objectName(),os.path.splitext(val),pval)
                         obj.setText(val)
                     if type(obj) == type(QtWidgets.QSpinBox()):
                         obj.setValue(val)
                     if type(obj) == type(QtWidgets.QCheckBox()):
                         obj.setChecked(val)
-        me.textChanged=True
-        me.done=True
+        #me.textChanged=True
+        #me.done=True
 
     def timed(me,self):
         self.nk['timer']=QtCore.QTimer()
@@ -159,48 +202,17 @@ class controls:
                         lineEdit.setText('')
 
     def timer_actions(me,self):
-        #dont force extension,God Dammit!
-        pass
-        '''
-        focused=QtWidgets.QApplication.focusWidget()
-        lo=self.nk['obj']
-        ext='.key'
-        me.editActor(lo.private_key,ext,focused)
-        me.editActor(lo.public_key,ext,focused)
-        if lo.public_key.text() == lo.private_key.text():
-            if ( lo.public_key.text() != '' ) and ( lo.private_key.text() != '' ):
-                lo.public_key.setText(
-                        os.path.splitext(
-                            lo.public_key.text()
-                            )[0].upper()+ext
-                )
-        if me.public_was_focused_once == False:
-            #lo.public_key.setText(os.path.splitext(lo.private_key.text())[0].upper()+ext)
-            if lo.public_key.text() == '' and lo.private_key.text() != '':
-                lo.public_key.setText(os.path.splitext(lo.private_key.text())[0].upper()+ext)
-
-        if lo.public_key.text() == '':
-            me.public_was_focused_once=False
-        if lo.public_key.text() == '.key':
-            lo.public_key.setText('')
-
-        if focused != None:
-            if focused.objectName() == 'private_key':
-                if len(focused.text()) >= len(ext) and me.textChanged == True:
-                    focused.setCursorPosition(len(lo.private_key.text())-len(ext)) 
-            if focused.objectName() == 'public_key':
-                me.public_was_focused_once=True
-                if len(focused.text()) >= len(ext) and me.textChanged == True:
-                    focused.setCursorPosition(len(lo.public_key.text())-len(ext))
-
-        if time.localtime().tm_sec % 60 == 0:
-            if me.done == True:
-                me.textChanged=False
-                    
-        #if os.path.splitext(lo.public_key.text())[1] != ext and lo.public_key.text() != '':
-        #    lo.public_key.setText(lo.public_key.text()+ext)
-        '''
-
+        #use this for various items that might need to be done on a periodic basis
+        keys={'public_key':[QtWidgets.QLineEdit],'private_key':[QtWidgets.QLineEdit]}
+        for k in keys.keys():
+            local=self.nk['dialog'].findChildren(keys[k][0],k,QtCore.Qt.FindChildrenRecursively)
+            for little in local:
+                if little != None:
+                    keys[k].append(little)
+        if keys['private_key'][1].text() == keys['public_key'][1].text():
+            p,f=os.path.split(keys['public_key'][1].text())
+            keys['public_key'][1].setText(os.path.join(p,f.upper()))
+        
     def close_dialog(me,self,dialog,obj):
         #me.reset_fields(self,obj)
         dialog.hide()

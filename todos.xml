@@ -1,7 +1,7 @@
 <todos>
 	<list>
 		create new icon 'icons/application.png'
-		add utility to create new rsa-key
+
 		add utility to edit settings
 		add utility to edit application defaults
 		add functionality to use ed25519 for file encryption/decryption
