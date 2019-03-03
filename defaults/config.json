@@ -10,5 +10,6 @@
             "filter-key-list":"Encrypted Json Key List (*.ejk);;All Files (*)",
 	    "filter-hash-log":"Hash Log (*.hash);;All Files (*)",
 	    "default-start-tab":"encrypt",
-	    "app-icon":"icons/application.png"
+	    "app-icon":"icons/application.png",
+	    "useHashLog_on_Start":true
 }

@@ -1,7 +1,15 @@
 #! /usr/bin/env bash
 #build library py from ui
 
-src=('encrypt_widget' 'decrypt_widget' 'lib_ewk_gui' 'newKey')
+src=(
+	'encrypt_widget' 
+	'decrypt_widget' 
+	'lib_ewk_gui'
+       	'newKey'
+       	'tabdefaults'
+	'tabdefaults_encrypt'
+	'tabdefaults_decrypt'
+	)
 ui='./ui'
 lib_widget='./lib_widget'
 for i in ${src[@]} ; do

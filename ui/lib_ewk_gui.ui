@@ -111,7 +111,14 @@
     <addaction name="action_Quit"/>
     <addaction name="action_N_RSA_Key"/>
    </widget>
+   <widget class="QMenu" name="menu_Edit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="action_Tab_Defaults"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu_Edit"/>
   </widget>
   <action name="action_Quit">
    <property name="text">
@@ -124,6 +131,11 @@
   <action name="action_N_RSA_Key">
    <property name="text">
     <string>&amp;New RSA Key</string>
+   </property>
+  </action>
+  <action name="action_Tab_Defaults">
+   <property name="text">
+    <string>&amp;Tab Defaults</string>
    </property>
   </action>
  </widget>

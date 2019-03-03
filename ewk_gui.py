@@ -17,6 +17,10 @@ import lib_ew_controls,lib_dw_controls
 import engineering_notation as en
 
 import lib_newKey,newKey
+import tabdefaults,tabdefaults_decrypt,tabdefaults_encrypt
+import lib_tabdefaults_controls as ltc
+import lib_tabdefaults_encrypt_controls as ltec
+import lib_tabdefaults_decrypt_controls as ltdc
 
 #error logging
 import logging
@@ -43,6 +47,33 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
     ext='.ebin'
     keyExt='.ejk'
     logger=logging
+    def construct_defaults(self):
+        self.td={}
+        self.td['dialog']=QtWidgets.QDialog(self)
+
+        self.td['obj']=tabdefaults.Ui_tabDefaults()
+        self.td['obj'].setupUi(self.td['dialog'])
+        #dialog global controls here
+        #like a save button
+        self.td['controls']=ltc.tabdefaults_controls(self)
+
+        self.td['tabs']={}
+        self.td['tabs']['encrypt']={}
+        self.td['tabs']['encrypt']['dialog']=QtWidgets.QDialog(self.td['dialog'])
+        self.td['tabs']['encrypt']['obj']=tabdefaults_encrypt.Ui_tabdefaults_encrypt()
+        self.td['tabs']['encrypt']['obj'].setupUi(self.td['tabs']['encrypt']['dialog'])
+        #tab level controls here
+        self.td['tabs']['encrypt']['controls']=ltec.tabdefaults_encrypt_controls(self)
+
+        self.td['tabs']['decrypt']={}
+        self.td['tabs']['decrypt']['dialog']=QtWidgets.QDialog(self.td['dialog'])
+        self.td['tabs']['decrypt']['obj']=tabdefaults_decrypt.Ui_tabdefaults_decrypt()
+        self.td['tabs']['decrypt']['obj'].setupUi(self.td['tabs']['decrypt']['dialog'])
+        self.td['tabs']['decrypt']['controls']=ltdc.tabdefaults_decrypt_controls(self)
+
+        self.td['obj'].tabEncrypt.addWidget(self.td['tabs']['encrypt']['dialog'],0,0,0,0)
+        self.td['obj'].tabDecrypt.addWidget(self.td['tabs']['decrypt']['dialog'],0,0,0,0)
+
     def expand_path(self,path):
         return os.path.expanduser(os.path.expandvars(path))
 
@@ -351,7 +382,8 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                 }
         self.nk['controls']=lib_newKey.controls(self)
 
-
+        self.construct_defaults() 
+        
         #setup controls
         self.ctrl=libControl.controls()
         self.ctrl.init(self)
