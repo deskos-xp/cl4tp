@@ -5,7 +5,11 @@
 		add utility to edit settings
 		add utility to edit application defaults
 			work on ontrols for tab lvl controls
+				add saving functionality
+				add clear all settings functionality
 			work controls for top widget lvl controls
+				add fmanager functionality to button actions in each subclass
+				
 		add functionality to use ed25519 for file encryption/decryption
 	</list>
 </todos>

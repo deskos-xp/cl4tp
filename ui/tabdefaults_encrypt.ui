@@ -173,7 +173,7 @@
            <item row="0" column="2">
             <widget class="QLabel" name="sizeInEN">
              <property name="text">
-              <string>EN: {} {}</string>
+              <string>EN: {}</string>
              </property>
             </widget>
            </item>

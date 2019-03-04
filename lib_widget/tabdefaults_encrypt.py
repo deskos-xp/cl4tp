@@ -114,5 +114,5 @@ class Ui_tabdefaults_encrypt(object):
         self.label_2.setText(_translate("tabdefaults_encrypt", "Infile"))
         self.label_6.setText(_translate("tabdefaults_encrypt", "Hash Log"))
         self.browse_ofile.setText(_translate("tabdefaults_encrypt", "Browse"))
-        self.sizeInEN.setText(_translate("tabdefaults_encrypt", "EN: {} {}"))
+        self.sizeInEN.setText(_translate("tabdefaults_encrypt", "EN: {}"))
 
