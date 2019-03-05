@@ -8,8 +8,7 @@ for the Qt Interface, use
 
 `python3 ewk_gui.py`
 
-`
-usage: encryptWithKey.py [-h] [-p PRIVATE] [-P PUBLIC] [-x PASSWORD]
+`usage: encryptWithKey.py [-h] [-p PRIVATE] [-P PUBLIC] [-x PASSWORD]
                          [-c CHUNKSIZE] [-k KEY_LIST] [-e] [-d]
                          [-u UNENCRYPTED_FILE] [-E ENCRYPTED_FILE]
 
@@ -31,5 +30,4 @@ optional arguments:
   -u UNENCRYPTED_FILE, --unencrypted-file UNENCRYPTED_FILE
                         unencryped file
   -E ENCRYPTED_FILE, --encrypted-file ENCRYPTED_FILE
-                        encrypted file
-`
+                        encrypted file`
