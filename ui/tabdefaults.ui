@@ -18,24 +18,43 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="0">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="save">
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="clear">
+         <property name="toolTip">
+          <string>Clear fields using internal defaults not in configuration file</string>
+         </property>
          <property name="text">
           <string>Clear</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="save">
+         <property name="toolTip">
+          <string>save data to configuration file</string>
+         </property>
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
         <widget class="QPushButton" name="close">
+         <property name="toolTip">
+          <string>close without saving</string>
+         </property>
          <property name="text">
           <string>Close</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QPushButton" name="reset">
+         <property name="toolTip">
+          <string>reset fields from data contained within configuration file</string>
+         </property>
+         <property name="text">
+          <string>Reset</string>
          </property>
         </widget>
        </item>

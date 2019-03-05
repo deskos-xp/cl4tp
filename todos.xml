@@ -10,6 +10,9 @@
 					keep a backup incase of screw-ups ( been there done that, not fun )
 			work controls for top widget lvl controls
 				add clear all settings functionality
+				create a hardcoded set of defaults for the clear all button to use
+				create a reset button to revert to settings pulled from file
+
 
 				
 		add functionality to use ed25519 for file encryption/decryption
