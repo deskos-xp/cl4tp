@@ -1,20 +1,20 @@
-#Claptrap's (cl4-tp) Encrypt With Key
-##A Set of tools for file encryption as well as for the purpose of learning Crypto in python3
+# Claptrap's (cl4-tp) Encrypt With Key
+## A Set of tools for file encryption as well as for the purpose of learning Crypto in python3
 
-#PREP
+# PREP
 `pip install -r requirements.txt`
 
-#Example CMD Line Call
+# Example CMD Line Call
 
 `python3 encryptWithKey.py -x avalon -P /home/carl/keys/public.key -p /home/carl/keys/private.key  -u ./archlinux-2018.05.01-x86_64.iso -E a -c 10485760 -e`
 
 for the Qt Interface, use
 
-#Call the GUI
+# Call the GUI
 
 `python3 ewk_gui.py`
 
-#CMD Line Utility Useage
+# CMD Line Utility Useage
 
 ```
 usage: encryptWithKey.py [-h] [-p PRIVATE] [-P PUBLIC] [-x PASSWORD]
