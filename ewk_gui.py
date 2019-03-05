@@ -53,12 +53,15 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
 
         self.td['obj']=tabdefaults.Ui_tabDefaults()
         self.td['obj'].setupUi(self.td['dialog'])
+        self.td['settings']={}
         #dialog global controls here
         #like a save button
         self.td['controls']=ltc.tabdefaults_controls(self)
 
+
         self.td['tabs']={}
         self.td['tabs']['encrypt']={}
+        self.td['tabs']['encrypt']['settings']={}
         self.td['tabs']['encrypt']['dialog']=QtWidgets.QDialog(self.td['dialog'])
         self.td['tabs']['encrypt']['obj']=tabdefaults_encrypt.Ui_tabdefaults_encrypt()
         self.td['tabs']['encrypt']['obj'].setupUi(self.td['tabs']['encrypt']['dialog'])
@@ -66,6 +69,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.td['tabs']['encrypt']['controls']=ltec.tabdefaults_encrypt_controls(self)
 
         self.td['tabs']['decrypt']={}
+        self.td['tabs']['decrypt']['settings']={}
         self.td['tabs']['decrypt']['dialog']=QtWidgets.QDialog(self.td['dialog'])
         self.td['tabs']['decrypt']['obj']=tabdefaults_decrypt.Ui_tabdefaults_decrypt()
         self.td['tabs']['decrypt']['obj'].setupUi(self.td['tabs']['decrypt']['dialog'])
@@ -133,6 +137,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
 
 
     def fmanager(self,mode,tab,returnExt=False):
+        file=('','')
         if mode == 'hash_log':
             key='filter-hash-log'
             fd=''
@@ -166,10 +171,16 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         if mode == 'ofile':
             if tab['settings']['mode'] == 'encrypt':
                 key='encrypt-filter-ofile'
-                fd=os.path.basename(tab['settings']['ifile'])+self.ext
+                if tab['settings']['ifile'] != '':
+                    fd=os.path.basename(tab['settings']['ifile'])+self.ext
+                else:
+                    fd=''
             if tab['settings']['mode'] == 'decrypt':
                 key='decrypt-filter-ofile'
-                fd=os.path.basename(os.path.splitext(tab['settings']['ifile'])[0])
+                if tab['settings']['ifile'] != '':
+                    fd=os.path.basename(os.path.splitext(tab['settings']['ifile'])[0])
+                else:
+                    fd=''
 
             file=QtWidgets.QFileDialog.getSaveFileName(
                     caption=mode,
@@ -181,7 +192,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
                     )
             print(file)
             if file[1] == 'Encrypted Binary (*.ebin)':
-                if os.path.splitext(file[0])[1] != self.ext:
+                if os.path.splitext(file[0])[1] != self.ext and file[1] != '':
                     return file[0]+self.ext
         if mode == 'public_key':
             file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-public-key'])

@@ -4,7 +4,6 @@ import engineering_notation as en
 
 class tabdefaults_controls:
     def __init__(me,self):
-        me.settings={}
         me.loadDefaults(self)
         me.buttons(self)
 
@@ -17,9 +16,9 @@ class tabdefaults_controls:
 
     def loadDefaults(me,self):
         with open(self.field_defaults,'r') as cnf:
-            me.settings=json.load(cnf)
+            self.td['settings']=json.load(cnf)
 
     def save(me,self):
-        me.settings['encrypt']=self.td['tabs']['encrypt']['controls'].settings
-        me.settings['decrypt']=self.td['tabs']['decrypt']['controls'].settings
-        print(me.settings)
+        self.td['settings']['encrypt']=self.td['tabs']['encrypt']['settings']
+        self.td['settings']['decrypt']=self.td['tabs']['decrypt']['settings']
+        print(self.td['settings'])

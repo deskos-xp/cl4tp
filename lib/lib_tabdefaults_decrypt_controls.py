@@ -4,19 +4,24 @@ import engineering_notation as en
 from copy import copy
 class tabdefaults_decrypt_controls:
     def __init__(me,self):
-        me.settings={}
         me.loadDefaults(self)
         me.buttons(self)
         me.valueChanged(self)
 
     def loadDefaults(me,self):
-        me.settings=copy(self.td['controls'].settings['decrypt'])
+        self.td['tabs']['decrypt']['settings']=copy(self.td['settings']['decrypt'])
 
     def browser_button_actions(me,self):
         key=self.sender().objectName()
         if len(key) > len('browse_'):
             key=key[len('browse_'):]
         print(key)
+        virt_fd=self.fmanager(key,self.td['tabs']['decrypt'])
+        textbox=self.td['tabs']['decrypt']['dialog'].findChildren(QtWidgets.QLineEdit,key,QtCore.Qt.FindChildrenRecursively)
+        if textbox != None and type(textbox) == type(list()):
+            for i in textbox:
+                if type(i) == type(QtWidgets.QLineEdit()):
+                    i.setText(virt_fd)
 
     def buttons(me,self):
         local=self.td['tabs']['decrypt']
@@ -29,12 +34,11 @@ class tabdefaults_decrypt_controls:
                         i.clicked.connect(lambda: me.browser_button_actions(self))
 
     def saveSetting(me,self):
-
         value=None
         key=self.sender().objectName()
         if type(self.sender()) == type(QtWidgets.QLineEdit()):
             value=self.sender().text()
-        me.settings[key]=value
+        self.td['tabs']['decrypt']['settings'][key]=value
 
     def valueChanged(me,self):
         local=self.td['tabs']['decrypt']

@@ -68,7 +68,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="infile">
+            <widget class="QLineEdit" name="ifile">
              <property name="dragEnabled">
               <bool>true</bool>
              </property>
@@ -116,7 +116,7 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QPushButton" name="browse_infile">
+            <widget class="QPushButton" name="browse_ifile">
              <property name="text">
               <string>Browse</string>
              </property>
@@ -130,7 +130,7 @@
             </widget>
            </item>
            <item row="6" column="1">
-            <widget class="QLineEdit" name="hashlog">
+            <widget class="QLineEdit" name="hash_log">
              <property name="dragEnabled">
               <bool>true</bool>
              </property>

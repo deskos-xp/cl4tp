@@ -5,14 +5,13 @@ from copy import copy
 
 class tabdefaults_encrypt_controls:
     def __init__(me,self):
-        me.settings={}
         me.loadDefaults(self)
         me.valueChanged(self)
         me.setLabelSpecial(self)
         me.buttons(self)
 
     def loadDefaults(me,self):
-        me.settings=copy(self.td['controls'].settings['encrypt'])
+        self.td['tabs']['encrypt']['settings']=copy(self.td['settings']['encrypt'])
 
     def setLabelSpecial(me,self):
         self.td['tabs']['encrypt']['obj'].sizeInEN.setText("EN: {}".format(en.EngNumber(self.td['tabs']['encrypt']['obj'].dataChunkSize.value(),0)))
@@ -22,6 +21,13 @@ class tabdefaults_encrypt_controls:
         if len(key) > len('browse_'):
             key=key[len('browse_'):]
         print(key)
+        virt_fd=self.fmanager(key,self.td['tabs']['encrypt'])
+        textbox=self.td['tabs']['encrypt']['dialog'].findChildren(QtWidgets.QLineEdit,key,QtCore.Qt.FindChildrenRecursively)
+        if textbox != None and type(textbox) == type(list()):
+            for i in textbox:
+                if type(i) == type(QtWidgets.QLineEdit()):
+                    i.setText(virt_fd)
+        
 
     def buttons(me,self):
         local=self.td['tabs']['encrypt']
@@ -41,7 +47,7 @@ class tabdefaults_encrypt_controls:
              value=self.sender().value()
              if key == 'dataChunkSize':
                  me.setLabelSpecial(self)
-         me.settings[key]=value
+         self.td['tabs']['encrypt']['settings'][key]=value
          print(value,key)
 
     def valueChanged(me,self):
