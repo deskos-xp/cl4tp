@@ -14,6 +14,7 @@ class controls:
         me.valueChanged(self)
         me.buttons(self)
         self.timed_actions(self.dw)
+        me.reset_fields(self)
 
     def decrypt_file(me,self,tab):
         tab['running']=True

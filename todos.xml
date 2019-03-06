@@ -7,8 +7,7 @@
 			work on controls for tab lvl controls
 				add saving functionality
 					remind user that this will overwrite default tab settings config file and that this is a permannent operation
-					keep a backup incase of screw-ups ( been there done that, not fun )
-			work controls for top widget lvl controls
+			work on controls for top widget lvl controls
 				add clear all settings functionality
 				create a hardcoded set of defaults for the clear all button to use
 				create a reset button to revert to settings pulled from file

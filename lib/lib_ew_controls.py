@@ -13,7 +13,7 @@ class controls:
         me.valueChanged(self)
         me.buttons(self)
         self.timed_actions(self.ew)
-    
+        me.reset_fields(self) 
     def generate_hash_log(self,tab,ifile,ofile,key_list,progress_callback=None,chunksize=2048,hash_log=None):
         if hash_log == None:
             hash_log=os.path.join(

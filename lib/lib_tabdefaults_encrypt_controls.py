@@ -9,7 +9,22 @@ class tabdefaults_encrypt_controls:
         me.valueChanged(self)
         me.setLabelSpecial(self)
         me.buttons(self)
+        me.setField_data(self)
 
+    def setField_data(me,self):
+        local=self.td['tabs']['encrypt']['dialog']
+        types=(QtWidgets.QLineEdit,QtWidgets.QSpinBox,)
+        for t in types:
+            fields=local.findChildren(t,QtCore.QRegularExpression('.'),QtCore.Qt.FindChildrenRecursively)
+            if fields != None and type(fields) == type(list()):
+                for e in fields:
+                    key=e.objectName()
+                    if key in self.td['tabs']['encrypt']['settings'].keys():
+                        if type(e) == type(QtWidgets.QLineEdit()):
+                            e.setText(self.td['tabs']['encrypt']['settings'][key])
+                        elif type(e) == type(QtWidgets.QSpinBox()):
+                            e.setValue(self.td['tabs']['encrypt']['settings'][key])
+                        
     def loadDefaults(me,self):
         self.td['tabs']['encrypt']['settings']=copy(self.td['settings']['encrypt'])
 
@@ -20,7 +35,7 @@ class tabdefaults_encrypt_controls:
         key=self.sender().objectName()
         if len(key) > len('browse_'):
             key=key[len('browse_'):]
-        print(key)
+        #print(key)
         virt_fd=self.fmanager(key,self.td['tabs']['encrypt'])
         textbox=self.td['tabs']['encrypt']['dialog'].findChildren(QtWidgets.QLineEdit,key,QtCore.Qt.FindChildrenRecursively)
         if textbox != None and type(textbox) == type(list()):
@@ -28,7 +43,6 @@ class tabdefaults_encrypt_controls:
                 if type(i) == type(QtWidgets.QLineEdit()):
                     i.setText(virt_fd)
         
-
     def buttons(me,self):
         local=self.td['tabs']['encrypt']
         types=(QtWidgets.QPushButton,)
@@ -48,7 +62,7 @@ class tabdefaults_encrypt_controls:
              if key == 'dataChunkSize':
                  me.setLabelSpecial(self)
          self.td['tabs']['encrypt']['settings'][key]=value
-         print(value,key)
+         #print(value,key)
 
     def valueChanged(me,self):
         local=self.td['tabs']['encrypt']
