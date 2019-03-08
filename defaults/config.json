@@ -11,5 +11,5 @@
 	    "filter-hash-log":"Hash Log (*.hash);;All Files (*)",
 	    "default-start-tab":"encrypt",
 	    "app-icon":"icons/application.png",
-	    "useHashLog_on_Start":true
+	    "useHashLog-on-Start":true
 }

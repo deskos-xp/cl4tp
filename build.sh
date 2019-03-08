@@ -9,6 +9,7 @@ src=(
        	'tabdefaults'
 	'tabdefaults_encrypt'
 	'tabdefaults_decrypt'
+	'editSettings'
 	)
 ui='./ui'
 lib_widget='./lib_widget'

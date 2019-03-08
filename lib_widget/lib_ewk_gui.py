@@ -82,9 +82,12 @@ class Ui_ewk_gui(object):
         self.action_N_RSA_Key.setObjectName("action_N_RSA_Key")
         self.action_Tab_Defaults = QtWidgets.QAction(ewk_gui)
         self.action_Tab_Defaults.setObjectName("action_Tab_Defaults")
+        self.action_Application_wide_Settings = QtWidgets.QAction(ewk_gui)
+        self.action_Application_wide_Settings.setObjectName("action_Application_wide_Settings")
         self.menuFile.addAction(self.action_Quit)
         self.menuFile.addAction(self.action_N_RSA_Key)
         self.menu_Edit.addAction(self.action_Tab_Defaults)
+        self.menu_Edit.addAction(self.action_Application_wide_Settings)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menu_Edit.menuAction())
 
@@ -103,4 +106,5 @@ class Ui_ewk_gui(object):
         self.action_Quit.setShortcut(_translate("ewk_gui", "Ctrl+Q"))
         self.action_N_RSA_Key.setText(_translate("ewk_gui", "&New RSA Key"))
         self.action_Tab_Defaults.setText(_translate("ewk_gui", "&Tab Defaults"))
+        self.action_Application_wide_Settings.setText(_translate("ewk_gui", "&Application-wide Settings"))
 

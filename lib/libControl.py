@@ -14,6 +14,7 @@ class controls:
         self.action_Quit.triggered.connect(QtWidgets.QApplication.quit)
         self.action_N_RSA_Key.triggered.connect(self.nk['dialog'].show)
         self.action_Tab_Defaults.triggered.connect(self.td['dialog'].show)
+        self.action_Application_wide_Settings.triggered.connect(self.es['dialog'].show)
     '''
     def buttons(me,self):
         #self.ew['obj'].encrypt_file.clicked.connect(lambda: self.ew['controls'].encrypt_file(self))

@@ -195,7 +195,7 @@ class controls:
         self.dw['obj'].browse_key_list.clicked.connect(lambda: me.saveSetting(self,'key_list',self.fmanager('key_list',self.dw),setField=True))
         self.dw['obj'].browse_private_Key.clicked.connect(lambda: me.saveSetting(self,'private_key',self.fmanager('private_key',self.dw),setField=True))
         self.dw['obj'].browse_hashlog.clicked.connect(lambda: me.saveSetting(self,'hash_log',self.fmanager('hash_log',self.dw),setField=True))
-        self.dw['obj'].checkHashes.setChecked(self.config['useHashLog_on_Start'])
+        self.dw['obj'].checkHashes.setChecked(self.config['useHashLog-on-Start'])
 
     def enable_hashLog(me,self):
         dw=self.dw['obj']

@@ -152,7 +152,7 @@ class controls:
         self.ew['obj'].browse_keylist.clicked.connect(lambda: me.saveSetting(self,'key_list',self.fmanager('key_list',self.ew),setField=True))
         self.ew['obj'].browse_public_key.clicked.connect(lambda: me.saveSetting(self,'public_key',self.fmanager('public_key',self.ew),setField=True))
         self.ew['obj'].browse_hash_log.clicked.connect(lambda: me.saveSetting(self,'hash_log',self.fmanager('hash_log',self.ew),setField=True))
-        self.ew['obj'].useHashes.setChecked(self.config['useHashLog_on_Start'])
+        self.ew['obj'].useHashes.setChecked(self.config['useHashLog-on-Start'])
 
     def valueChanged(me,self):
         local=self.ew['obj']

@@ -21,7 +21,7 @@ import tabdefaults,tabdefaults_decrypt,tabdefaults_encrypt
 import lib_tabdefaults_controls as ltc
 import lib_tabdefaults_encrypt_controls as ltec
 import lib_tabdefaults_decrypt_controls as ltdc
-
+import editSettings,lib_editSettings as es
 #error logging
 import logging
 logging.basicConfig(filename='ewk-errors.log',format="%(asctime)s %(message)s",datefmt='%m/%d/%Y %H:%M:%S',level=logging.ERROR)
@@ -395,6 +395,13 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
 
         self.construct_defaults() 
         
+        self.es={}
+        self.es['dialog']=QtWidgets.QDialog(self)
+        self.es['obj']=editSettings.Ui_editSettings()
+        self.es['obj'].setupUi(self.es['dialog'])
+        self.es['settings']={}
+        self.es['controls']=es.controls(self)
+
         #setup controls
         self.ctrl=libControl.controls()
         self.ctrl.init(self)
