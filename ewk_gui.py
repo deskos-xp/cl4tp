@@ -202,6 +202,10 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
             file=QtWidgets.QFileDialog.getSaveFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-public-key'])
         if mode == 'private_key_save':
             file=QtWidgets.QFileDialog.getSaveFileName(caption=mode,directory=self.config['ssh-dir'],filter=self.config['filter-private-key'])
+        if mode == 'dir-select':
+            file = (str(QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory")),)
+        if mode == 'icon-select':
+            file=QtWidgets.QFileDialog.getOpenFileName(caption=mode,directory=self.config['app-icon'],filter='PNG (*.png);;All Files (*)')
 
         if mode == 'key_list':
             if tab['settings']['mode'] == 'decrypt':
@@ -400,6 +404,8 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.es['obj']=editSettings.Ui_editSettings()
         self.es['obj'].setupUi(self.es['dialog'])
         self.es['settings']={}
+        with open(self.config_file,'r') as cfg:
+            self.es['settings']=json.load(cfg)
         self.es['controls']=es.controls(self)
 
         #setup controls

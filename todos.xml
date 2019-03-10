@@ -2,8 +2,10 @@
 	<list>
 		create new icon 'icons/application.png'
 
-		add utility to edit settings
-				
+
+		warn user before saving file that saving invalid settings may leave prog unusable with a yes to save, no to forget
+		if fields are empty, or invalid/non-existant, throw an error to log, dump an emergency config to file for the user to edit to get the prog up and running
+
 		add functionality to use ed25519 for file encryption/decryption
 
 	</list>

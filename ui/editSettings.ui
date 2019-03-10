@@ -276,7 +276,7 @@
          </item>
          <item row="1" column="0">
           <layout class="QGridLayout" name="gridLayout_6">
-           <item row="0" column="2">
+           <item row="0" column="1">
             <widget class="QPushButton" name="reset">
              <property name="toolTip">
               <string>reset fields to defaults from file</string>
@@ -286,17 +286,7 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="clear">
-             <property name="toolTip">
-              <string>set all fields to internal defaults</string>
-             </property>
-             <property name="text">
-              <string>&amp;Clear</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
+           <item row="0" column="2">
             <widget class="QPushButton" name="close">
              <property name="toolTip">
               <string>close dialog without saving</string>
@@ -326,6 +316,36 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>ssh_dir</tabstop>
+  <tabstop>default_ofile_dir</tabstop>
+  <tabstop>encrypt_filter_ofile</tabstop>
+  <tabstop>decrypt_filter_ofile</tabstop>
+  <tabstop>encrypt_filter_ifile</tabstop>
+  <tabstop>decrypt_filter_ifile</tabstop>
+  <tabstop>filter_public_key</tabstop>
+  <tabstop>filter_private_key</tabstop>
+  <tabstop>filter_key_list</tabstop>
+  <tabstop>filter_hash_log</tabstop>
+  <tabstop>app_icon</tabstop>
+  <tabstop>default_start_tab</tabstop>
+  <tabstop>browse_ssh_dir</tabstop>
+  <tabstop>browse_default_ofile_dir</tabstop>
+  <tabstop>browse_app_icon</tabstop>
+  <tabstop>useHashLog_on_Start</tabstop>
+  <tabstop>save</tabstop>
+  <tabstop>reset</tabstop>
+  <tabstop>close</tabstop>
+  <tabstop>tool_encrypt_ofile_filter</tabstop>
+  <tabstop>tool_decrypt_filter_ofile</tabstop>
+  <tabstop>tool_encrypt_filter_ifile</tabstop>
+  <tabstop>tool_decrypt_filter_ifile</tabstop>
+  <tabstop>tool_filter_private_key</tabstop>
+  <tabstop>tool_filter_public_key</tabstop>
+  <tabstop>tool_filter_key_list</tabstop>
+  <tabstop>tool_filter_hash_log</tabstop>
+  <tabstop>scrollArea</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
