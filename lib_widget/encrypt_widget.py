@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file './ui/encrypt_widget.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_encrypt(object):
     def setupUi(self, encrypt):
@@ -124,4 +125,5 @@ class Ui_encrypt(object):
         self.useHashes.setText(_translate("encrypt", "Use Hash Log"))
         self.encrypt_file.setText(_translate("encrypt", "Encrypt"))
         self.reset.setText(_translate("encrypt", "Reset Fields"))
+
 

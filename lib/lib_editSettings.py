@@ -2,13 +2,15 @@
 
 from PyQt5 import QtWidgets,QtCore
 import os,sys,time,json
+sys.path.append('./lib')
+from lib_tabdefaults_controls import timedMessageBox
 
 class controls:
     def __init__(me,self):
         #for a button to be useful/useable register in me.useable as below
         me.useableButtons={
                 'close':me.close,
-            'save':me.save, 
+            'save':me.warn_before_save, 
             'reset':me.reset,
             'browse_ssh_dir':me.saveSetting,
             'browse_default_ofile_dir':me.saveSetting,
@@ -104,6 +106,25 @@ class controls:
             self.es['settings']=json.load(cnf)
         me.loadSettings(self)
         self.statusBar().showMessage('loaded hardwired defaults to reset fields!')
+
+    def warn_before_save(me,self):
+        dec="Yes"
+        warning=QtWidgets.QMessageBox(self)
+        warning.setIcon(QtWidgets.QMessageBox.Warning)
+        warning.setText('This operation will save your application-wide settings to the configuration file for settings? Do you wish to continue?')
+        warning.setStandardButtons(QtWidgets.QMessageBox.No|QtWidgets.QMessageBox.Yes)
+        warning.setDefaultButton(QtWidgets.QMessageBox.Yes)
+        resolution=warning.exec()
+        if resolution == QtWidgets.QMessageBox.Yes:
+            me.save(self)
+        else:
+            dec='No'
+        message='The user chose "{}".\n All operations have completed, you may now close the Tab Default\'s editor\n'.format(dec)
+
+        info=timedMessageBox(5,message)
+        info.setIcon(QtWidgets.QMessageBox.Information)
+        info.exec()
+        self.statusBar().showMessage('')
 
     def save(me,self):
         local=self.es['dialog']

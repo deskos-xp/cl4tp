@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file './ui/tabdefaults_decrypt.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_tabdefaults_decrypt(object):
     def setupUi(self, tabdefaults_decrypt):
@@ -104,4 +105,5 @@ class Ui_tabdefaults_decrypt(object):
         self.label_5.setText(_translate("tabdefaults_decrypt", "Password"))
         self.label_2.setText(_translate("tabdefaults_decrypt", "Ofile"))
         self.password_actions.setText(_translate("tabdefaults_decrypt", "?"))
+
 

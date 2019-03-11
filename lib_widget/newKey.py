@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file './ui/newKey.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_newKey(object):
     def setupUi(self, newKey):
@@ -101,4 +102,5 @@ class Ui_newKey(object):
         self.save.setText(_translate("newKey", "Save"))
         self.clear.setText(_translate("newKey", "Clear"))
         self.close.setText(_translate("newKey", "Close"))
+
 

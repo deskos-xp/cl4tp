@@ -22,6 +22,7 @@ import lib_tabdefaults_controls as ltc
 import lib_tabdefaults_encrypt_controls as ltec
 import lib_tabdefaults_decrypt_controls as ltdc
 import editSettings,lib_editSettings as es
+import lib_emergency
 #error logging
 import logging
 logging.basicConfig(filename='ewk-errors.log',format="%(asctime)s %(message)s",datefmt='%m/%d/%Y %H:%M:%S',level=logging.ERROR)
@@ -93,10 +94,25 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         self.config['ssh-dir']=self.expand_path(self.config['ssh-dir'])
         self.config['default-ofile-dir']=self.expand_path(self.config['default-ofile-dir'])
         if not os.path.exists(self.config['default-ofile-dir']):
-            os.mkdir(self.config['default-ofile-dir'])
+            self.logger.error('missing default-ofile-dir {} : making it now!'.format(self.config['default-ofile-dir']))
+            try:
+                os.mkdir(self.config['default-ofile-dir'])
+            except Exception as e:
+                alt=os.path.join(os.environ['HOME'],'Downloads')
+                if not os.path.exists(alt):
+                    alt=os.environ['HOME']
+                self.logger.error('there was an error while making default-ofile-dir {}! using {} as alternative'.format(self.config['default-ofile-dir'],alt))
+                self.config['default-ofile-dir']=alt
+
         if os.path.exists(self.expand_path(self.config['app-icon'])):
             icon=QtGui.QIcon(self.expand_path(self.config['app-icon']))
             self.setWindowIcon(icon)
+        else:
+            self.logger.error('invalid application icon {} : does not exist!'.format(self.config['app-icon']))
+
+        if not os.path.exists(self.expand_path(self.config['ssh-dir'])):
+            self.logger.error('invalid ssh-dir: does not exist - using {}'.format(os.environ['HOME']))
+            self.config['ssh-dir']=os.environ['HOME']
 
     def actors(self,tab):
         children=tab['dialog'].findChildren(QtWidgets.QLineEdit)
@@ -341,6 +357,7 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
 
     def __init__(self):
         super(self.__class__,self).__init__()
+        self.logger.error('Application Starting')
         self.load_config()
 
         self.setupUi(self)
@@ -407,6 +424,9 @@ class ewk_gui(QtWidgets.QMainWindow,lib_ewk_gui.Ui_ewk_gui):
         with open(self.config_file,'r') as cfg:
             self.es['settings']=json.load(cfg)
         self.es['controls']=es.controls(self)
+
+        self.ec={}
+        self.ec['controls']=lib_emergency.emergency(self)
 
         #setup controls
         self.ctrl=libControl.controls()

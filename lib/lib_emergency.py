@@ -1,5 +1,5 @@
 import os,json,logging, time
-
+from PyQt5 import QtWidgets
 class emergency:
     config={
             "ssh-dir": "/home/carl/.ssh",
@@ -14,10 +14,7 @@ class emergency:
             "filter-hash-log": "Hash Log (*.hash);;All Files (*)",
             "default-start-tab": "encrypt", 
             "app-icon": "/home/carl/claptrap/icons/application.png", 
-            "useHashLog-on-Start": true, 
-            "ssh_dir": "/home/carl/.ssh", 
-            "default_ofile_dir": "/home/carl/ekw-save", 
-            "app_icon": "/home/carl/claptrap/icons/application.png" 
+            "useHashLog-on-Start": True, 
             }
 
     tab_defaults={
@@ -39,12 +36,15 @@ class emergency:
                 "hash_log": ""
                 }
             }
+
     def __init__(me,self):
         me.modify_config(self)
-
+        
     def modify_config(me,self):
         #modify self.config for the particulars of the current user before dumping to file
-        pass
+        me.config['ssh-dir']=os.path.join(os.environ['HOME'],'.ssh')
+        me.config['default-ofile-dir']=os.path.join(os.environ['HOME'],'ekw_save')
+        me.config['app-icon']=os.path.join(os.environ['PWD'],'icons/application.png')
 
     def dumpToFile(me,self,cnf,cnf_name):
         #dump cnf to file
@@ -55,4 +55,41 @@ class emergency:
             msg='couldn\'t dump emergency config to file: {}'.format(e)
             self.logger.error(msg)
             print(msg)
+            raise FileNotFoundError 
             
+
+    def generate(me,self):
+        err=[]
+        try:
+            me.dumpToFile(self,me.tab_defaults,self.field_defaults)
+        except Exception as e:
+            err.append(str(e))
+            self.logger.error('there was a problem writing config file {} : {}'.format(
+                os.path.join(
+                    self.conf_dir,
+                    self.field_defaults
+                    ),
+                str(e)
+                )
+                )
+        try:
+            me.dumpToFile(self,me.config,self.config_file)
+        except Exception as e:
+            err.append(str(e))
+            self.logger.error('there was a problem writing config file {} : {}'.format(
+                os.path.join(
+                    self.conf_dir,
+                    self.config_file
+                    ),
+                str(e)
+                )
+                )
+        if len(err) > 0:
+            print(err)
+            dialog=QtWidgets.QMessageBox(self)
+            dialog.setIcon(QtWidgets.QMessageBox.Critical)
+            dialog.setText('There was an Error!')
+            dialog.setInformativeText(',\n'.join(err))
+            dialog.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            dialog.setDefaultButton(QtWidgets.QMessageBox.Ok)
+            dialog.exec()

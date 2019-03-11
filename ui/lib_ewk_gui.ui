@@ -117,6 +117,7 @@
     </property>
     <addaction name="action_Tab_Defaults"/>
     <addaction name="action_Application_wide_Settings"/>
+    <addaction name="actionNew_Config"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu_Edit"/>
@@ -142,6 +143,11 @@
   <action name="action_Application_wide_Settings">
    <property name="text">
     <string>&amp;Application-wide Settings</string>
+   </property>
+  </action>
+  <action name="actionNew_Config">
+   <property name="text">
+    <string>New Config (&amp;G)</string>
    </property>
   </action>
  </widget>

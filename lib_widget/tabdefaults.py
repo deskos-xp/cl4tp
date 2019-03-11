@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file './ui/tabdefaults.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_tabDefaults(object):
     def setupUi(self, tabDefaults):
@@ -69,4 +70,5 @@ class Ui_tabDefaults(object):
         self.reset.setText(_translate("tabDefaults", "Reset"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.encrypt), _translate("tabDefaults", "Encrypt"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.decrypt), _translate("tabDefaults", "Decrypt"))
+
 

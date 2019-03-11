@@ -1,0 +1,45 @@
+03/10/2019 21:58:53 Application Starting
+03/10/2019 21:58:57 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 21:59:19 Application Starting
+03/10/2019 21:59:23 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 21:59:54 Application Starting
+03/10/2019 21:59:55 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 21:59:55 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:00:29 Application Starting
+03/10/2019 22:00:32 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:00:32 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:00:53 Application Starting
+03/10/2019 22:00:56 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:00:56 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:01:11 Application Starting
+03/10/2019 22:01:13 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:01:13 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:01:40 Application Starting
+03/10/2019 22:01:42 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:01:42 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:02:06 Application Starting
+03/10/2019 22:02:08 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:02:08 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:02:45 Application Starting
+03/10/2019 22:02:46 there was a problem writing config file ./defaults/./defaults/default.json : dumpToFile() missing 1 required positional argument: 'cnf_name'
+03/10/2019 22:02:46 there was a problem writing config file ./defaults/./defaults/config.json : 'ewk_gui' object has no attribute 'configfile'
+03/10/2019 22:03:38 Application Starting
+03/10/2019 22:04:28 Application Starting
+03/10/2019 22:04:30 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/default.json'
+03/10/2019 22:04:30 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/config.json'
+03/10/2019 22:08:58 Application Starting
+03/10/2019 22:09:02 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/default.json'
+03/10/2019 22:09:02 there was a problem writing config file ./defaults/./defaults/default.json : 
+03/10/2019 22:09:02 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/config.json'
+03/10/2019 22:09:02 there was a problem writing config file ./defaults/./defaults/config.json : 
+03/10/2019 22:09:42 Application Starting
+03/10/2019 22:09:44 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/default.json'
+03/10/2019 22:09:44 there was a problem writing config file ./defaults/./defaults/default.json : 
+03/10/2019 22:09:44 couldn't dump emergency config to file: [Errno 2] No such file or directory: './defaults/./defaults/config.json'
+03/10/2019 22:09:44 there was a problem writing config file ./defaults/./defaults/config.json : 
+03/10/2019 22:12:42 Application Starting
+03/10/2019 22:13:55 Application Starting
+03/10/2019 22:22:36 Application Starting
+03/10/2019 22:23:58 Application Starting
+03/10/2019 22:24:38 Application Starting
+03/10/2019 22:25:31 Application Starting

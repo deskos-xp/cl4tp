@@ -2,11 +2,12 @@
 
 # Form implementation generated from reading ui file './ui/editSettings.ui'
 #
-# Created by: PyQt5 UI code generator 5.11.3
+# Created by: PyQt5 UI code generator 5.12
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 class Ui_editSettings(object):
     def setupUi(self, editSettings):
@@ -226,4 +227,5 @@ class Ui_editSettings(object):
         self.close.setText(_translate("editSettings", "Clos&e"))
         self.save.setToolTip(_translate("editSettings", "save settings to file"))
         self.save.setText(_translate("editSettings", "&Save"))
+
 
